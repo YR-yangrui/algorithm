@@ -30,6 +30,8 @@ Plugin 'fholgado/minibufexpl.vim'
 Plugin 'gcmt/wildfire.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'Lokaltog/vim-easymotion'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'lilydjwg/fcitx.vim'
 " 插件列表结束
@@ -46,11 +48,12 @@ let mapleader=";"
 "保存即加载.vimrc
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "{{{映射
-map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r<Esc>
-map <F10> <Esc>:!./%:r<Esc>
-map <c-l> <Esc>0i//<Esc>
-map <c-p> <Esc>0xx<Esc>
-map <c-g> <Esc>:!gdb -q %:r<Esc>
+map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r1<Esc>
+map <F10> <Esc>:!./%:r1<Esc>
+map <c-l> <Esc>0i/*<Esc><end>a*/<Esc>
+map <c-p> <Esc>0xx<Esc><end>xx
+map <c-g> <Esc>:!gdb -q %:r1<Esc>
+map <leader>ww  <esc>:w! ~/temp/%<Esc>
 nmap LB 0
 nmap LE $
 "{{{快速切换窗口
@@ -86,8 +89,8 @@ set cursorline
 set cursorcolumn
 "}}}
 "{{{ 配色方案
-set background=dark
-colorscheme solarized
+"set background=dark
+"colorscheme solarized
 "colorscheme molokai
 "colorscheme phd
 "}}}
