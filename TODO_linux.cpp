@@ -10,10 +10,10 @@ Created Time:2019年01月05日 星期六 20时32分59秒
 #include<vector>
 #include<cstdlib>
 using namespace std;
-ifstream fin("~/.TODO");
-ofstream fout("~/.TODO",ios::app);
-ifstream din("~/.DONE");
-ofstream dout("~/.DONE",ios::app);
+ifstream fin(".TODO");
+ofstream fout(".TODO",ios::app);
+ifstream din(".DONE");
+ofstream dout(".DONE",ios::app);
 vector<string>V;
 vector<string>D;
 bool ok=1;
@@ -52,12 +52,12 @@ void show_list()
 void save()
 {
         fout.close();
-        fout.open("~/.TODO");
+        fout.open(".TODO");
         fout<<name<<endl;
         for(vector<string>::iterator it=V.begin();it!=V.end();it++)
                 fout<<*it<<endl;
         dout.close();
-        dout.open("~/.DONE");
+        dout.open(".DONE");
         for(vector<string>::iterator it=D.begin();it!=D.end();it++)
                 dout<<*it<<endl;
         ok=1;
