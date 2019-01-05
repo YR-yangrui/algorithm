@@ -40,7 +40,6 @@ Plugin 'iamcco/markdown-preview.vim'
 Plugin 'iamcco/mathjax-support-for-mkdp'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-"Plugin 'scrooloose/nerdtree'
 " 插件列表结束
 call vundle#end()
 filetype plugin indent on
@@ -58,14 +57,14 @@ set autoindent "自动对齐
 set ai! "设置自动缩进
 setl efm=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
 set makeprg=g++\ -Wall\ \ %
-"set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 let mapleader=";"
 "代码补全
 "set completeopt=longest,menu
 "set completeopt=preview,menu
 "hi Normal ctermfg=252 ctermbg=none
 "保存即加载.vimrc
-"autocmd BufWritePost $MYVIMRC source $MYVIMRC
+autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "}}}
 "{{{映射
 map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r1<Esc>
@@ -79,8 +78,11 @@ map <leader>oo <esc>:vsp %:r.out<esc>
 map <leader>wi <esc>:!cat %:r.in<esc>
 map <leader>wo <esc>:!cat %:r.out<esc>
 map <leader>bash <esc>:ConqueTermSplit bash<esc>
-nmap LB 0
-nmap LE $
+map ,n <esc>:tabn<esc>
+map ,p <esc>:tabp<esc>
+"<leader>cc 紧贴代码加注释
+"<leader>cb 代码最前面加注释
+"<leader>cu 解开注释
 "{{{快速切换窗口
 nnoremap <Leader>lw <c-w>l
 nnoremap <Leader>hw <c-w>h
@@ -118,17 +120,17 @@ if(has("gui_running"))
 set background=dark
 "colorscheme solarized
 colorscheme space-vim-dark
-let g:space_vim_dark_background =234
+"let g:space_vim_dark_background =234
 "colorscheme molokai
 "colorscheme phd
 endif
 "}}}
 "{{{ 设置 gvim 显示字体
-set guifont=YaHei\ Consolas\ Hybrid\ 11.5
 if(has("gui_running"))
-let g:Powerline_colorscheme='space-vim-dark'
+set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+"let g:Powerline_colorscheme='space-vim-dark'
 else
-let g:Powerline_colorscheme='solarized256'
+"let g:Powerline_colorscheme='solarized256'
 endif
 syntax keyword cppSTLtype initializer_list
 "}}}
@@ -168,40 +170,62 @@ autocmd VimEnter * call ToggleFullscreen()
 " ConqueTermTab     <command>:先建一个tab页之后打开<command>
 "}}}
 "{{{自动插入文件头
+function! CurDir()
+        let curdir=substitute(getcwd(),$HOME,"~","g")
+        return curdir
+endfunction
 autocmd BufNewFile *.cpp :call SetTitle()
 function! SetTitle()
         if &filetype =='cpp'
-                call setline(1,"/*")
-                call append(line("."),"ID:galaxy_6")
-                call append(line(".")+1,"LANG:C++")
-                call append(line(".")+2,"TASK:".expand("%:r"))
-                call append(line(".")+3,"*/")
-                call append(line(".")+4,"#include<iostream>")
-                call append(line(".")+5,"#include<cstdio>")
-                call append(line(".")+6,"using namespace std;")
-                call append(line(".")+7,"int main()")
-                call append(line(".")+8,"{")
-                call append(line(".")+9,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                call append(line(".")+10,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                call append(line(".")+11,"}")
+                if(CurDir()=='~/YR/USACO')
+                        call setline(1,"/*")
+                        call append(line("."),"ID:galaxy_6")
+                        call append(line(".")+1,"LANG:C++")
+                        call append(line(".")+2,"TASK:".expand("%:r"))
+                        call append(line(".")+3,"*/")
+                        call append(line(".")+4,"#include<iostream>")
+                        call append(line(".")+5,"#include<cstdio>")
+                        call append(line(".")+6,"using namespace std;")
+                        call append(line(".")+7,"int main()")
+                        call append(line(".")+8,"{")
+                        call append(line(".")+9,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+10,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+11,"}")
+                else 
+                        call setline(1,"/*******************************")
+                        call append(line("."),"Author:galaxy yr")
+                        call append(line(".")+1,"LANG:C++")
+                        call append(line(".")+2,"Created Time:".strftime("%c"))
+                        call append(line(".")+3,"*******************************/")
+                        call append(line(".")+4,"#include<iostream>")
+                        call append(line(".")+5,"#include<cstdio>")
+                        call append(line(".")+6,"using namespace std;")
+                        call append(line(".")+7,"int main()")
+                        call append(line(".")+8,"{")
+                        call append(line(".")+9,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+10,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+11,"}")
+                endif
         endif
         autocmd BufNewFile * normal G
 endfunction
 "}}}
-"{{{暂无作用
-"let var=%:p
-"let now='/home/galaxy_yr/YR/USACO'
-"if (var==now)
-"        if &filetype =='cpp'
-"                call append(line("."),"/*")
-"                call append(line(".")+1,"ID:galaxy_6")
-"                call append(line(".")+2,"LANG:C++")
-"                call append(line(".")+3,"TASK:"+%:r)
-"                call append(line(".")+4,"*/")
-"        endif
-"endif
-"}}}
 "{{{NERDTree
-map <leader>n :NERDTreeToggle<cr>
+nmap ner <esc>:NERDTreeToggle<cr>
 autocmd bufenter * if (winnr("$")==1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q| endif
+"}}}
+"{{{airline
+set t_Co=256
+let g:airline_powerline_fonts=1
+let g:airline_theme='zenburn'
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#left_alt_sep=' '
+let g:airline#extensions#tabline#buffer_nr_show=' '
+"}}}
+"{{{cpp-enhanced-highlight
+let g:cpp_class_scope_highlight=1
+let g:cpp_member_variable_highlight=1
+let g:cpp_concepts_highlight=1
+let g:cpp_class_decl_highlight=1
+"let g:cpp_experimental_simple_template_highlight=1
 "}}}
