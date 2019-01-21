@@ -8,8 +8,8 @@ Created Time:2018年12月30日 星期日 21时20分01秒
 #include<string>
 #include<cstdio>
 using namespace std;
-const string name1="cmp1.txt";
-const string name2="cmp2.txt";
+const string name1="splay.out";
+const string name2="t.out";
 ifstream f1(name1);
 ifstream f2(name2);
 int main()
@@ -22,7 +22,11 @@ int main()
                 if(c1!=c2)
                 {
                         cout<<"WRONG!!!\n";
-                        cout<<"on line "<<n<<",read: "<<c1<<','<<c2<<endl;
+                        cout<<"on line "<<n+1<<",read: "<<c1;
+                        //while((c1=f1.get())!='\n')cout<<c1;
+                        cout<<','<<c2;
+                        //while((c2=f2.get())!='\n') cout<<c2;
+                        cout<<endl;
                         return 0;
                 }
                 if(c1=='\n')n++;
