@@ -64,3 +64,5 @@ $=\sum_{d|n}{f(d)g(\frac{n}{d})}$
 =$\sum_{d_1d_2|n_1n_2}{f(d_1)g(\frac{n_1}{d_1})f(d_2)g(\frac{n_2}{d_2})}$
 
 =$(f*g)(n_1)*(f*g)(n_2)$
+
+* [ x ] [Bash Plays with Functions](https://www.luogu.org/problemnew/show/CF757E)
