@@ -18,7 +18,7 @@ void solve()
 }
 //费马小定理
 //x^p mod p=1
-long long ksm(long long a,long long b,long long c)
+long long ksm(long long a,long long b,long long c=p)
 {
         long long ans=1;
         while(b)
@@ -47,7 +47,7 @@ void exgcd(long long a,long long b,long long & x,long long &y)
         long long t=x;
         x=y; y=t-a/b*y;
 }
-long long solve(long long a,long long b)
+long long solve1(long long a,long long b)
 {
         long long k1,k2;
         exgcd(a,b,k1,k2);
@@ -56,7 +56,7 @@ long long solve(long long a,long long b)
 int main()
 {
 	cin>>n>>p;
-        solve();
+        cout<<solve1(n,p);
 	return 0;
 }
 
