@@ -10,7 +10,7 @@ Created Time:2019年01月05日 星期六 20时32分59秒
 #include<vector>
 #include<cstdlib>
 using namespace std;
-ifstream fin(".TODO");
+istream fin(".TODO");
 ofstream fout(".TODO",ios::app);
 ifstream din(".DONE");
 ofstream dout(".DONE",ios::app);
@@ -139,6 +139,8 @@ void menu()
                 cout<<"A 保存 B 删除 C 查看 D退出 F完成 G添加\n";
                 char ch;
                 cin>>ch;
+                while(cin.get()!='\n');
+                if(ch=='l')ch='c';
                 if(ch=='A' or ch=='a') save();
                 else if(ch=='B' or ch=='b')del();
                 else if(ch=='C' or ch=='c') show_list();

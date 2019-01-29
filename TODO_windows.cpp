@@ -144,6 +144,8 @@ void menu()
                 cout<<"A 保存 B 删除 C 查看 D退出 F完成 G添加\n";
                 char ch;
                 cin>>ch;
+                while(cin.get()!='\n');
+                if(ch=='l')ch='c';
                 if(ch=='A' or ch=='a') save();
                 else if(ch=='B' or ch=='b')del();
                 else if(ch=='C' or ch=='c') show_list();
