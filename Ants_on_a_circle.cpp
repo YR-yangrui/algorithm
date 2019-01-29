@@ -18,22 +18,20 @@ int main()
         freopen("Ants_on_a_circle.out","w",stdout);
         cin>>n>>l>>t;
         for(int i=1;i<=n;i++) cin>>m[i].loc>>m[i].dir,m[i].id=i;
-        for(int i=1;i<=n;i++)m[i].dir==2?m[i].dir=-1:m[i].dir=1;
-        st=m[1].loc;
-        for(int i=1;i<=n;i++) 
-        {
-                m[i].loc=(m[i].loc+m[i].dir*t);
-                if(m[i].loc<0)m[i].loc++;
-                m[i].loc%=l;
-                if(m[i].loc>st)cnt++; else if(m[i].loc<=st) cnt--;
-                dis[i]=(m[i].loc+l)%l;
-        }
-        sort(dis+1,dis+1+n);
-        cnt=(cnt+n)%n;
+        for(int i=1;i<=n;i++) m[i].dir==2?m[i].dir=-1:m[i].dir=1;
         for(int i=1;i<=n;i++)
         {
-                cout<<dis[cnt]<<endl;
-                if(++cnt>n)cnt-=n;
+                dis[i]=m[i].loc+m[i].dir*t;
+                if(dis[i]>=l) (cnt+=(dis[i]/l))%=n;
+                if(dis[i]<0) (cnt+=(dis[i]+1)/l-1)%=n;
+                dis[i]=(dis[i]%l+l)%l;
+        }
+        cnt=(cnt+n)%n+1;
+        sort(dis+1,dis+n+1);
+        for(int i=1;i<=n;i++)
+        {
+                cout<<dis[cnt++]<<endl;
+                if(cnt>n)cnt-=n;
         }
         return 0;
 }

@@ -33,8 +33,10 @@ long long solve(int a,int b)
 }
 int main()
 {
-        freopen("HAOI2011_Problem_b.in","r",stdin);
-        freopen("HAOI2011_Problem_b.out","w",stdout);
+        //freopen("HAOI2011_Problem_b.in","r",stdin);
+        //freopen("HAOI2011_Problem_b.out","w",stdout);
+        freopen("ZAP-Queries.in","r",stdin);
+        freopen("ZAP-Queries.out","w",stdout);
         n=50000;
         mu[1]=1;
         for(int i=2;i<=n;i++)
@@ -52,8 +54,10 @@ int main()
         while(n--)
         {
                 //cin>>a>>b>>c>>d>>k;
-                read(a),read(b),read(c),read(d),read(k);
-                printf("%lld\n",(solve(b,d)-solve(b,c-1)-solve(a-1,d)+solve(a-1,c-1)));
+                //read(a),read(b),read(c),read(d),read(k);
+                //printf("%lld\n",(solve(b,d)-solve(b,c-1)-solve(a-1,d)+solve(a-1,c-1)));
+                cin>>a>>b>>k;
+                cout<<solve(a,b)<<endl;
         }
         return 0;
 }
