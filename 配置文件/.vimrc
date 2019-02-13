@@ -74,6 +74,7 @@ map <c-l> <Esc>0i/*<Esc><end>a*/<Esc>
 map <c-p> <Esc>0xx<Esc><end>xx
 map <c-g> <Esc>:!gdb -q %:r1<Esc>
 map <leader>ww  <esc>:w! ~/temp/%<Esc>
+map <leader>to <esc>:vsp ~/temp/%<esc>
 map <leader>oi <esc>:vsp %:r.in<esc>
 map <leader>oo <esc>:vsp %:r.out<esc>
 map <leader>wi <esc>:!cat %:r.in<esc>
@@ -191,13 +192,57 @@ function! SetTitle()
                         call append(line(".")+3,"*/")
                         call append(line(".")+4,"#include<iostream>")
                         call append(line(".")+5,"#include<cstdio>")
-                        call append(line(".")+6,"using namespace std;")
-                        call append(line(".")+7,"int main()")
-                        call append(line(".")+8,"{")
-                        call append(line(".")+9,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+10,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                        call append(line(".")+11,"}")
-                else 
+                        call append(line(".")+6,"struct IO{")
+                        call append(line(".")+7,"       template<typename T>")
+                        call append(line(".")+8,"               IO & operator>>(T&res)")
+                        call append(line(".")+9,"               {")
+                        call append(line(".")+10,"                      char ch=getchar();")
+                        call append(line(".")+11,"                      T q=1;")
+                        call append(line(".")+12,"                      while(ch<'0' or ch>'9'){if(ch=='-')q=-q;ch=getchar();}") 
+                        call append(line(".")+13,"                      res=(ch^48);") 
+                        call append(line(".")+14,"                      while((ch=getchar())>='0' and ch<='9')")
+                        call append(line(".")+15,"                      res=(res<<1)+(res<<3)+(ch^48);") 
+                        call append(line(".")+16,"                      res*=q;") 
+                        call append(line(".")+17,"                      return *this;") 
+                        call append(line(".")+18,"              }")
+                        call append(line(".")+19,"}cin;")
+                        call append(line(".")+20,"using std::cout;")
+                        call append(line(".")+21,"int main()")
+                        call append(line(".")+22,"{")
+                        call append(line(".")+23,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+24,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+25,"}")
+                elseif expand("%")=="dp.cpp"
+                        call setline(1,"/*******************************")
+                        call append(line("."),"Author:galaxy yr")
+                        call append(line(".")+1,"LANG:C++")
+                        call append(line(".")+2,"Created Time:".strftime("%c"))
+                        call append(line(".")+3,"*******************************/")
+                        call append(line(".")+4,"#include<fstream>")
+                        call append(line(".")+5,"#include<string>")
+                        call append(line(".")+6,"#include<ctime>")
+                        call append(line(".")+7,"#include<cstdlib>")
+                        call append(line(".")+8,"#include<iostream>")
+                        call append(line(".")+9,"using namespace std")
+                        call append(line(".")+10,"const string name1(),name2()")
+                        call append(line(".")+11,"ifstream f1(name1),f2(name2)")
+                        call append(line(".")+12,"int main()")
+                        call append(line(".")+13,"{")
+                        call append(line(".")+14,"       while(true)")
+                        call append(line(".")+15,"       {")
+                        call append(line(".")+16,"               system(\"./rand1\") system(\"./1\") system(\"./1\")")
+                        call append(line(".")+17,"               char ch1,ch2; int k=-1")
+                        call append(line(".")+18,"               while(f1 and f2)")
+                        call append(line(".")+19,"               {")
+                        call append(line(".")+20,"                       f1>>ch1;f2>>ch2;")
+                        call append(line(".")+21,"                       if(ch1=='\\n')k++;")
+                        call append(line(".")+22,"                       if(ch1!=ch2)cout<<\"NO. on line:\"<<k<<endl")
+                        call append(line(".")+23,"                       else cout<<\"Yes\"<<endl;")
+                        call append(line(".")+24,"               }")
+                        call append(line(".")+25,"       }")
+                        call append(line(".")+26,"       return 0;")
+                        call append(line(".")+27,"}")
+                else
                         call setline(1,"/*******************************")
                         call append(line("."),"Author:galaxy yr")
                         call append(line(".")+1,"LANG:C++")
@@ -205,12 +250,26 @@ function! SetTitle()
                         call append(line(".")+3,"*******************************/")
                         call append(line(".")+4,"#include<iostream>")
                         call append(line(".")+5,"#include<cstdio>")
-                        call append(line(".")+6,"using namespace std;")
-                        call append(line(".")+7,"int main()")
-                        call append(line(".")+8,"{")
-                        call append(line(".")+9,"        freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+10,"        freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                        call append(line(".")+11,"}")
+                        call append(line(".")+6,"struct IO{")
+                        call append(line(".")+7,"       template<typename T>")
+                        call append(line(".")+8,"               IO & operator>>(T&res)")
+                        call append(line(".")+9,"               {")
+                        call append(line(".")+10,"                      char ch=getchar();")
+                        call append(line(".")+11,"                      T q=1;")
+                        call append(line(".")+12,"                      while(ch<'0' or ch>'9'){if(ch=='-')q=-q;ch=getchar();}") 
+                        call append(line(".")+13,"                      res=(ch^48);") 
+                        call append(line(".")+14,"                      while((ch=getchar())>='0' and ch<='9')")
+                        call append(line(".")+15,"                      res=(res<<1)+(res<<3)+(ch^48);") 
+                        call append(line(".")+16,"                      res*=q;") 
+                        call append(line(".")+17,"                      return *this;") 
+                        call append(line(".")+18,"              }")
+                        call append(line(".")+19,"}cin;")
+                        call append(line(".")+20,"using std::cout;")
+                        call append(line(".")+21,"int main()")
+                        call append(line(".")+22,"{")
+                        call append(line(".")+23,"        freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+24,"        freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+25,"}")
                 endif
         endif
         autocmd BufNewFile * normal G
@@ -362,9 +421,9 @@ nmap <Leader>tp :tprevious<CR>
 
 " 基于语义的代码导航
 
-nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
-" 只能是 #include 或已打开的文件
-nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+"nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
+"" 只能是 #include 或已打开的文件
+"nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 
 " <<
 
@@ -419,63 +478,63 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 
 " 模板补全
 " UltiSnips 的 tab 键与 YCM 冲突，重新设定
-let g:UltiSnipsSnippetDirectories=["mysnippets"]
-let g:UltiSnipsExpandTrigger="<leader><tab>"
-let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
-let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+"let g:UltiSnipsSnippetDirectories=["mysnippets"]
+"let g:UltiSnipsExpandTrigger="<leader><tab>"
+"let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
-" >>
-" YCM 补全
+"" >>
+"" YCM 补全
 
-" YCM 补全菜单配色
-" 菜单
-highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
-" 选中项
-highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
+"" YCM 补全菜单配色
+"" 菜单
+"highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
+"" 选中项
+"highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
 
-" 补全功能在注释中同样有效
-let g:ycm_complete_in_comments=1
+"" 补全功能在注释中同样有效
+"let g:ycm_complete_in_comments=1
 
-" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
-let g:ycm_confirm_extra_conf=0
+"" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
+"let g:ycm_confirm_extra_conf=0
 
-" 开启 YCM 标签补全引擎
-let g:ycm_collect_identifiers_from_tags_files=0
-"" 引入 C++ 标准库 tags
-"set tags+=/data/misc/software/app/vim/stdcpp.tags
-"set tags+=/data/misc/software/app/vim/sys.tags
+"" 开启 YCM 标签补全引擎
+"let g:ycm_collect_identifiers_from_tags_files=0
+""" 引入 C++ 标准库 tags
+""set tags+=/data/misc/software/app/vim/stdcpp.tags
+""set tags+=/data/misc/software/app/vim/sys.tags
 
-" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
-inoremap <leader>; <C-x><C-o>
+"" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
+"inoremap <leader>; <C-x><C-o>
 
-" 补全内容不以分割子窗口形式出现，只显示补全列表
-set completeopt-=preview
+"" 补全内容不以分割子窗口形式出现，只显示补全列表
+"set completeopt-=preview
 
-" 从第一个键入字符就开始罗列匹配项
-let g:ycm_min_num_of_chars_for_completion=1
+"" 从第一个键入字符就开始罗列匹配项
+"let g:ycm_min_num_of_chars_for_completion=1
 
-" 禁止缓存匹配项，每次都重新生成匹配项
-let g:ycm_cache_omnifunc=0
+"" 禁止缓存匹配项，每次都重新生成匹配项
+"let g:ycm_cache_omnifunc=0
 
-" 语法关键字补全
-let g:ycm_seed_identifiers_with_syntax=1
+"" 语法关键字补全
+"let g:ycm_seed_identifiers_with_syntax=1
 
-" <<
+"" <<
  
-" >>
-" 由接口快速生成实现框架
+"" >>
+"" 由接口快速生成实现框架
 
-" 成员函数的实现顺序与声明顺序一致
-let g:able_protodef_sorting=1
+"" 成员函数的实现顺序与声明顺序一致
+"let g:able_protodef_sorting=1
 
-" <<
+"" <<
 
-" >>
-" 库信息参考
+"" >>
+"" 库信息参考
  
-" 启用:Man命令查看各类man信息
-source $VIMRUNTIME/ftplugin/man.vim
+"" 启用:Man命令查看各类man信息
+"source $VIMRUNTIME/ftplugin/man.vim
 
-" 定义:Man命令查看各类man信息的快捷键
-nmap <Leader>man :Man 3 <cword><CR>
-"}}}
+"" 定义:Man命令查看各类man信息的快捷键
+"nmap <Leader>man :Man 3 <cword><CR>
+""}}}
