@@ -15,7 +15,7 @@ int manacher(string s,int *p,int n)
                 if(maxid>i)p[i]=min(p[id*2-i],maxid-i);
                 else p[i]=1;
                 while(s[i+p[i]]==s[i-p[i]])p[i]++;
-                if(p[i]+i>id)maxid=p[i]+i,id=i;
+                if(p[i]+i>maxid)maxid=p[i]+i,id=i;
                 maxd=max(maxd,p[i]);
         }
         return maxd-1;
