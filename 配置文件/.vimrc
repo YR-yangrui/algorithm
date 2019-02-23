@@ -53,6 +53,7 @@ set fdm=marker
 "}}}
 "{{{设置
 "set showmatch "自动匹配又括号
+"set tabstop=4
 set smartindent "智能对齐
 set autoindent "自动对齐
 set ai! "设置自动缩进
@@ -68,6 +69,7 @@ let mapleader=";"
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "}}}
 "{{{映射
+map <F8> <esc>ggVG"+y<esc>
 map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r1<Esc>
 map <F10> <Esc>:!./%:r1<Esc>
 map <c-l> <Esc>0i/*<Esc><end>a*/<Esc>
@@ -84,6 +86,7 @@ map ,n <esc>:tabn<esc>
 map ,p <esc>:tabp<esc>
 map <leader>hl <c-w>>
 map <leader>hh <c-w><
+map <c-a> ggVG
 "<leader>cc 紧贴代码加注释
 "<leader>cb 代码最前面加注释
 "<leader>cu 解开注释
@@ -206,7 +209,7 @@ function! SetTitle()
                         call append(line(".")+17,"                      return *this;") 
                         call append(line(".")+18,"              }")
                         call append(line(".")+19,"}cin;")
-                        call append(line(".")+20,"using std::cout;")
+                        call append(line(".")+20,"using std::cout; using std::endl;")
                         call append(line(".")+21,"int main()")
                         call append(line(".")+22,"{")
                         call append(line(".")+23,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
@@ -223,20 +226,20 @@ function! SetTitle()
                         call append(line(".")+6,"#include<ctime>")
                         call append(line(".")+7,"#include<cstdlib>")
                         call append(line(".")+8,"#include<iostream>")
-                        call append(line(".")+9,"using namespace std")
-                        call append(line(".")+10,"const string name1(),name2()")
-                        call append(line(".")+11,"ifstream f1(name1),f2(name2)")
+                        call append(line(".")+9,"using namespace std;")
+                        call append(line(".")+10,"const string name1(),name2();")
+                        call append(line(".")+11,"ifstream f1(name1),f2(name2);")
                         call append(line(".")+12,"int main()")
                         call append(line(".")+13,"{")
                         call append(line(".")+14,"       while(true)")
                         call append(line(".")+15,"       {")
-                        call append(line(".")+16,"               system(\"./rand1\") system(\"./1\") system(\"./1\")")
-                        call append(line(".")+17,"               char ch1,ch2; int k=-1")
+                        call append(line(".")+16,"               system(\"./rand1\");system(\"./1\");system(\"./1\");")
+                        call append(line(".")+17,"               char ch1,ch2; int k=-1;f1.clear();f2.clear();")
                         call append(line(".")+18,"               while(f1 and f2)")
                         call append(line(".")+19,"               {")
                         call append(line(".")+20,"                       f1>>ch1;f2>>ch2;")
                         call append(line(".")+21,"                       if(ch1=='\\n')k++;")
-                        call append(line(".")+22,"                       if(ch1!=ch2)cout<<\"NO. on line:\"<<k<<endl")
+                        call append(line(".")+22,"                       if(ch1!=ch2)cout<<\"NO. on line:\"<<k<<endl;")
                         call append(line(".")+23,"                       else cout<<\"Yes\"<<endl;")
                         call append(line(".")+24,"               }")
                         call append(line(".")+25,"       }")
@@ -264,7 +267,7 @@ function! SetTitle()
                         call append(line(".")+17,"                      return *this;") 
                         call append(line(".")+18,"              }")
                         call append(line(".")+19,"}cin;")
-                        call append(line(".")+20,"using std::cout;")
+                        call append(line(".")+20,"using std::cout; using std::endl;")
                         call append(line(".")+21,"int main()")
                         call append(line(".")+22,"{")
                         call append(line(".")+23,"        freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))

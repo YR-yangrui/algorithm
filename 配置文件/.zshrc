@@ -121,6 +121,8 @@ export LANG=en_US.UTF-8
  alias -s tgz='tar -xzvf'
  alias -s zip='unzip'
  alias -s bz2='tar -xjvf'
+ alias fy='dict -d langdao-ec'
+ alias fyy='dict -d langdao-ce'
  #hash
  hash -d yr="/home/glaxy_yr/YR"
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && . ~/.autojump/etc/profile.d/autojump.sh
