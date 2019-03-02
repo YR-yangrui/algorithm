@@ -71,12 +71,12 @@ void dfs1(int u)
         size[u]=1;
         depth[u]=depth[f[u]]+1;
         for(int i=head[u];i;i=e[i].next)
-                if(e[i].to!=f[u])
+                if(v!=f[u])
                 {
-                        f[e[i].to]=u;
-                        dfs1(e[i].to);
-                        size[u]+=size[e[i].to];
-                        if(size[e[i].to]>size[son[u]])son[u]=v;
+                        f[v]=u;
+                        dfs1(v);
+                        size[u]+=size[v];
+                        if(size[v]>size[son[u]])son[u]=v;
                 }
         return;
 }
