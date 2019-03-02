@@ -25,7 +25,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/DrawIt'
 Plugin 'SirVer/ultisnips'
 Plugin 'liuchengxu/space-vim-dark'
-"Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'derekwyatt/vim-protodef'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
@@ -33,8 +33,7 @@ Plugin 'gcmt/wildfire.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'godlygeek/tabular'
-"Plugin 'plasticboy/vim-markdown'
-"Plugin 'suan/vim-instant-markdown'
+Plugin 'w0rp/ale'
 Plugin 'lilydjwg/fcitx.vim'
 "markdown 即时浏览
 Plugin 'iamcco/markdown-preview.vim'
@@ -54,6 +53,7 @@ set fdm=marker
 "{{{设置
 "set showmatch "自动匹配又括号
 "set tabstop=4
+set helplang=CN
 set smartindent "智能对齐
 set autoindent "自动对齐
 set ai! "设置自动缩进
@@ -69,11 +69,9 @@ let mapleader=";"
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "}}}
 "{{{映射
-map <F8> <esc>ggVG"+y<esc>
+map <F7> gg /freopen<CR> Vj;cc gg VG "+y gg/freopen<CR>Vj;cu
 map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r1<Esc>
 map <F10> <Esc>:!./%:r1<Esc>
-map <c-l> <Esc>0i/*<Esc><end>a*/<Esc>
-map <c-p> <Esc>0xx<Esc><end>xx
 map <c-g> <Esc>:!gdb -q %:r1<Esc>
 map <leader>ww  <esc>:w! ~/temp/%<Esc>
 map <leader>to <esc>:vsp ~/temp/%<esc>
@@ -319,10 +317,7 @@ set nocompatible
 set hidden
 set showtabline=0
 "}}}
-"{{{ 抄的
-set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
-set termencoding=utf-8
-set encoding=utf-8
+"{{{可视化缩进
 " 从第二层开始可视化显示缩进
 let g:indent_guides_start_level=2
 " 色块宽度
@@ -330,7 +325,11 @@ let g:indent_guides_guide_size=1
 " 快捷键 i 开/关缩进可视化
 nmap <silent> <Leader>i <Plug>IndentGuidesToggle
 nmap <silent> <Leader>sw :FSHere<cr>
-
+"}}}
+"{{{ 抄的
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
 " 自定义 vim-signature 快捷键
 let g:SignatureMap = {
         \ 'Leader'             :  "m",
@@ -487,40 +486,41 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 "let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 "" >>
-"" YCM 补全
+"}}}
+"{{{ YCM 补全
 
 "" YCM 补全菜单配色
 "" 菜单
-"highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
+highlight Pmenu ctermfg=2 ctermbg=4 guifg=#005f87 guibg=#EEE8D5
 "" 选中项
-"highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
+highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
 
 "" 补全功能在注释中同样有效
-"let g:ycm_complete_in_comments=1
+let g:ycm_complete_in_comments=1
 
 "" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
-"let g:ycm_confirm_extra_conf=0
+let g:ycm_confirm_extra_conf=0
 
 "" 开启 YCM 标签补全引擎
-"let g:ycm_collect_identifiers_from_tags_files=0
+let g:ycm_collect_identifiers_from_tags_files=0
 """ 引入 C++ 标准库 tags
-""set tags+=/data/misc/software/app/vim/stdcpp.tags
-""set tags+=/data/misc/software/app/vim/sys.tags
+"set tags+=/data/misc/software/app/vim/stdcpp.tags
+"set tags+=/data/misc/software/app/vim/sys.tags
 
 "" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
-"inoremap <leader>; <C-x><C-o>
+inoremap <leader>; <C-x><C-o>
 
 "" 补全内容不以分割子窗口形式出现，只显示补全列表
-"set completeopt-=preview
+set completeopt-=preview
 
 "" 从第一个键入字符就开始罗列匹配项
-"let g:ycm_min_num_of_chars_for_completion=1
+let g:ycm_min_num_of_chars_for_completion=1
 
 "" 禁止缓存匹配项，每次都重新生成匹配项
-"let g:ycm_cache_omnifunc=0
+let g:ycm_cache_omnifunc=0
 
 "" 语法关键字补全
-"let g:ycm_seed_identifiers_with_syntax=1
+let g:ycm_seed_identifiers_with_syntax=1
 
 "" <<
  
@@ -528,7 +528,7 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 "" 由接口快速生成实现框架
 
 "" 成员函数的实现顺序与声明顺序一致
-"let g:able_protodef_sorting=1
+let g:able_protodef_sorting=1
 
 "" <<
 
@@ -536,8 +536,68 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 "" 库信息参考
  
 "" 启用:Man命令查看各类man信息
-"source $VIMRUNTIME/ftplugin/man.vim
+source $VIMRUNTIME/ftplugin/man.vim
 
 "" 定义:Man命令查看各类man信息的快捷键
-"nmap <Leader>man :Man 3 <cword><CR>
+nmap <Leader>man :Man 3 <cword><CR>
 ""}}}
+"{{{html自动补全
+""autocmd BufNewFile *  setlocal filetype=html
+if &filetype =='html'
+function! InsertHtmlTag()
+	let pat = '\c<\w\+\s*\(\s\+\w\+\s*=\s*[''#$;,()."a-z0-9]\+\)*\s*>'
+	normal! a>
+	let save_cursor = getpos('.')
+	let result = matchstr(getline(save_cursor[1]), pat)
+	"if (search(pat, 'b', save_cursor[1]) && searchpair('<','','>','bn',0,  getline('.')) > 0)
+	if (search(pat, 'b', save_cursor[1]))
+		normal! lyiwf>
+		normal! a</
+		normal! p
+		normal! a>
+	endif
+	:call cursor(save_cursor[1], save_cursor[2], save_cursor[3])
+endfunction
+inoremap > <ESC>:call InsertHtmlTag()<CR>a<CR><Esc>O
+endif
+""<!--}}}-->
+"{{{ale
+"ale
+"始终开启标志列
+let g:ale_sign_column_always = 1
+let g:ale_set_highlights = 0
+"自定义error和warning图标
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+"在vim自带的状态栏中整合ale
+let g:ale_statusline_format = ['✗ %d', '⚡ %d', '✔ OK']
+"显示Linter名称,出错或警告等相关信息
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
+nmap sp <Plug>(ale_previous_wrap)
+nmap sn <Plug>(ale_next_wrap)
+"<Leader>s触发/关闭语法检查
+nmap <Leader>s :ALEToggle<CR>
+"<Leader>d查看错误或警告的详细信息
+nmap <Leader>d :ALEDetail<CR>
+"文件内容发生变化时不进行检查
+let g:ale_lint_on_text_changed = 'never'
+"打开文件时不进行检查
+let g:ale_lint_on_enter = 0
+"""}}}
+"{{{sdcv字典
+"use sdcv instead man
+set keywordprg=sdcv\ -u\ 朗道英汉字典5.0
+" F key call sdcv 
+function! Mydict()
+    let retstr=system('sdcv '.expand("<cword>"))
+    windo if expand("%")=="dict-win" |q!|endif
+    30vsp dict-win
+    setlocal buftype=nofile bufhidden=hide noswapfile
+    1s/^/\=retstr/
+    1
+endfunction
+nnoremap F :call Mydict()<CR>
+"}}}
