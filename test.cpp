@@ -41,16 +41,17 @@ int main()
         freopen("test.out","w",stdout);
     int n;
     bool q;
-    string s,k,h,t;
+    string s,k,h,t,st;
     cout<<"Is it linux?(1/0)";cin>>q;
     cout<<"Please enter filename:"; cin>>s;
+    cout<<"Please enter testname:"; cin>>st;
     cout<<"Pleae enter executable file command:(./x »ò x.exe)";cin>>k;
     cout<<"Please enter the number of test files:"; cin>>n;
     cout<<"Please enter the standard anwser file prefix:(x)";cin>>h;
     for(int i=1;i<=n;i++)
     {
-        cout<<"Start to test "<<i<<"th test file... ";
-        t=s+turn(i);
+        t=st+turn(i);
+        cout<<"Start to test "<<i<<"th test file ("<<t<<")... ";
         string m;
         if(q) m=("cp "+t+".in "+s+".in");
         else m=("copy "+t+".in "+s+".in");
