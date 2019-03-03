@@ -1,69 +1,21 @@
 /*******************************
 Author:galaxy yr
 LANG:C++
-Created Time:2019年02月28日 星期四 14时21分07秒
- *******************************/
+Created Time:2019年03月03日 星期日 16时54分43秒
+*******************************/
 #include<iostream>
 #include<cstdio>
-#include<algorithm>
-#include<cstring>
-struct IO{
-        template<typename T>
-                IO & operator>>(T&res)
-                {
-                        char ch=getchar();
-                        T q=1;
-                        while(ch<'0' or ch>'9'){if(ch=='-')q=-q;ch=getchar();}
-                        res=(ch^48);
-                        while((ch=getchar())>='0' and ch<='9')
-                                res=(res<<1)+(res<<3)+(ch^48);
-                        res*=q;
-                        return *this;
-                }
-}cin;
-using std::cout; using std::endl;
-const int N=61000;
-const int M=248000;
+using namespace std;
+const int maxn=1e5+10;
 struct edge{
         int to,next;
-}e[M];
-int f[N],depth[N],size[N],son[N],top[N],seg[M],rev[M],head[N],Max[N],sum[M],num[N],cnt;
-int n;
-inline void add(int u,int v)
+}e[maxn*2];
+int head[maxn*2],sum[maxn*4],lazy[maxn*4],son[maxn],f[maxn],depth[maxn],size[maxn],top[maxn],rev[maxn*4],seg[maxn*4],cnt,num[maxn],mod,ans;
+void add(int u,int v)
 {
-        e[++cnt].to=v;
-        e[cnt].next=head[u];
+        e[++cnt].next=head[u];
+        e[cnt].to=v;
         head[u]=cnt;
-}
-//f 父亲 ，depth深度 size子树节点数 son重边 top所在重链顶部节点 seg当前节点在线段树的位置 rev线段树节点对应的树节点
-int Sum,Maxx;
-void query(int k,int l,int r,int x,int y)
-{
-        if(l>y or r<x)return;
-        if(l>=x and r<=y)
-        {
-                Sum+=sum[k];
-                Maxx=std::max(Maxx,Max[k]);
-                return;
-        }
-        int mid=(l+r)>>1;
-        if(mid>=x)query(k<<1,l,mid,x,y);
-        if(mid<y)query(k<<1|1,mid+1,r,x,y);
-}
-void change(int k,int l,int r,int v,int pos)
-{
-        if(pos>r or pos<l)return;
-        if(l==r and l==pos)
-        {
-                sum[k]=v;
-                Max[k]=v;
-                return;
-        }
-        int mid=(l+r)>>1;
-        if(mid>=pos)change(k<<1,l,mid,v,pos);
-        if(mid<pos)change(k<<1|1,mid+1,r,v,pos);
-        sum[k]=sum[k<<1]+sum[k<<1|1];
-        Max[k]=std::max(Max[k<<1],Max[k<<1|1]);
 }
 #define v e[i].to
 void dfs1(int u)
@@ -76,75 +28,122 @@ void dfs1(int u)
                         f[v]=u;
                         dfs1(v);
                         size[u]+=size[v];
-                        if(size[v]>size[son[u]])son[u]=v;
+                        if(size[son[u]]<size[v])son[u]=v;
                 }
-        return;
 }
 void dfs2(int u,int tp)
 {
-        top[u]=tp,seg[u]=++seg[0], rev[seg[0]] = u;
-        if(son[u]) dfs2(son[u], tp);
+        top[u]=tp;
+        seg[u]=++seg[0];
+        rev[seg[0]]=u;
+        if(son[u]) dfs2(son[u],tp);
         for(int i=head[u];i;i=e[i].next)
-        {
-                if(v==f[u] or v==son[u])continue;
-                dfs2(v,v);
-        }
+                if(v!=f[u] and v!=son[u])
+                        dfs2(v,v);
 }
 #undef v
+void add(int k,int l,int r,int v)
+{
+        sum[k]+=(r-l+1)*v%mod;
+        sum[k]%=mod;
+        lazy[k]+=v;
+}
+void pushdown(int k,int l,int r,int mid)
+{
+        if(!lazy[k])return;
+        add(k<<1,l,mid,lazy[k]);
+        add(k<<1|1,mid+1,r,lazy[k]);
+        lazy[k]=0;
+}
+void query(int k,int l,int r,int x,int y,int & ans)
+{
+        if(l>y or r<x)return;
+        if(l>=x and r<=y) { ans+=sum[k]; ans%=mod; return; }
+        int mid=(l+r)>>1;
+        pushdown(k,l,r,mid);
+        if(mid>=x)query(k<<1,l,mid,x,y,ans);
+        if(mid<y)query(k<<1|1,mid+1,r,x,y,ans);
+}
+void modify(int k,int l,int r,int x,int y,int v)
+{
+        if(l>y or r<x)return;
+        if(l>=x and r<=y)return add(k,l,r,v);
+        int mid=(l+r)>>1;
+        pushdown(k,l,r,mid);
+        if(mid>=x)modify(k<<1,l,mid,x,y,v);
+        if(mid<y)modify(k<<1|1,mid+1,r,x,y,v);
+        sum[k]=sum[k<<1]+sum[k<<1|1];
+        sum[k]%=mod;
+}
 void build(int k,int l,int r)
 {
+        if(l==r) { sum[k]=num[rev[l]]; return; }
         int mid=(l+r)>>1;
-        if(l==r) { Max[k]=sum[k]=num[rev[l]]; return; }
         build(k<<1,l,mid);
         build(k<<1|1,mid+1,r);
         sum[k]=sum[k<<1]+sum[k<<1|1];
-        Max[k]=std::max(Max[k<<1],Max[k<<1|1]);
 }
-inline void ask(int x,int y)
+void ask(int x,int y)
 {
-        int fx=top[x],fy=top[y];
-        while(fx!=fy)
+        while(top[x]!=top[y])
         {
-                if(depth[fx]<depth[fy])std::swap(x,y),std::swap(fx,fy);
-                query(1,1,seg[0],seg[fx],seg[x]);
-                x=f[fx],fx=top[x];
+                if(depth[top[x]]<depth[top[y]])swap(x,y);
+                query(1,1,seg[0],seg[top[x]],seg[x],ans);
+                x=f[top[x]];
         }
-        if(depth[x]>depth[y])std::swap(x,y);
-        query(1,1,seg[0],seg[x],seg[y]);
+        if(depth[x]>depth[y])swap(x,y);
+        query(1,1,seg[0],seg[x],seg[y],ans);
+}
+void change(int x,int y,int v)
+{
+        while(top[x]!=top[y])
+        {
+                if(depth[top[x]]<depth[top[y]])swap(x,y);
+                modify(1,1,seg[0],seg[top[x]],seg[x],v);
+                x=f[top[x]];
+        }
+        if(depth[x]>depth[y])swap(x,y);
+        modify(1,1,seg[0],seg[x],seg[y],v);
 }
 int main()
 {
         freopen("树链剖分.in","r",stdin);
         freopen("树链剖分.out","w",stdout);
-        cin>>n;
-        int a,b,m;
-        char c1,c2;
+        ios::sync_with_stdio(false);
+        int n,m,root,u,v,opt,w;
+        cin>>n>>m>>root>>mod;
+        for(int i=1;i<=n;i++) cin>>num[i];
         for(int i=1;i<=n-1;i++)
         {
-                cin>>a>>m;
-                add(a,m);add(m,a);
+                cin>>u>>v;
+                add(u,v); add(v,u);
         }
-        for(int i=1;i<=n;i++)
-                cin>>num[i];
-        dfs1(1);
-        seg[0]=seg[1]=top[1]=rev[1]=1;
-        dfs2(1,1);
+        dfs1(root); dfs2(root,root);
         build(1,1,seg[0]);
-        cin>>m;
         while(m--)
         {
-                c1=getchar();c2=getchar();
-                cin>>a>>b;
-                if(c1=='C')
-                        change(1,1,seg[0],b,seg[a]);
-                else
+                cin>>opt>>u;
+                if(opt!=4)cin>>v;
+                if(opt==1)
                 {
-                        Sum=0;
-                        Maxx=-1e6;
-                        ask(a,b);
-                        if(c2=='M')
-                                printf("%d\n",Maxx);
-                        else printf("%d\n",Sum);
+                        cin>>w;
+                        change(u,v,w);
+                }
+                if(opt==2)
+                {
+                        ans=0;
+                        ask(u,v);
+                        cout<<ans<<endl;
+                }
+                if(opt==3)
+                {
+                        modify(1,1,seg[0],seg[u],seg[u]+size[u]-1,v);
+                }
+                if(opt==4)
+                {
+                        ans=0;
+                        query(1,1,seg[0],seg[u],seg[u]+size[u]-1,ans);
+                        cout<<ans<<endl;
                 }
         }
 }
