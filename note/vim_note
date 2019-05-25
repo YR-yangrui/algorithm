@@ -1,0 +1,53 @@
+"字符串1" ~= "字符串2" 1中是否有2 "^"开头 "$"末尾
+:execute "字符串" 运行字符串
+":execute" 命令只能用来执行冒号命令。":normal" 命令可以用来执行普通模式命令。
+然而，它的参数只能是按表面意义解释的命令字符，不能是表达式。例如: >
+
+	:normal gg=G
+
+这个命令将跳转到第一行并以 "=" 操作符排版所有行。
+   为了使 ":normal" 命令也可以带表达式，可以把 ":execute" 与其连起来使用。
+例: >
+
+	:execute "normal " . normal_commands
+    substitute
+
+system()		取得一个 shell 命令的结果
+
+要列出用户定义的命令，执行下面的命令: >
+
+	:command
+
+象那些内建的命令一样，用户自定义的命令也可以被缩写。你只需要键入足够区别于其它
+命令的字符就可以了。命令行补全也有效。
+
+
+参 数 个 数
+
+自定义命令可以带一系列的参数。参数的数目必须用 -nargs 选项来指定。例如，上面
+例子中的 :DeleteFirst 命令不带参数，所以你也可以这样来定义: >
+
+	:command -nargs=0 DeleteFirst 1delete
+
+不过，因为缺省参数数目为 0，你没有必要加上 "-nargs=0"。其它可用的值是:
+
+	-nargs=0	无参数
+	-nargs=1	一个参数
+	-nargs=*	任意数目的参数
+	-nargs=?	没有或一个参数
+	-nargs=+	一个或更多参数
+
+
+'splitbelow' 选项可以让新的窗口出现在当前窗口的下面。'splitright' 选项让垂直分
+割的窗口出现在当前窗口的右边。
+
+打开一个新窗口时可以在命令前加上一个修饰符说明新窗口应该出现在什么地方：
+>
+	:leftabove {cmd}	当前窗口的左上方
+	:aboveleft {cmd}	同上
+	:rightbelow {cmd}	当前窗口的右下方
+	:belowright {cmd}	同上
+	:topleft {cmd}		整个 Vim 窗口的最上面或者最左边
+	:botright {cmd}		整个 Vim 窗口的最下面或者最右边
+
+

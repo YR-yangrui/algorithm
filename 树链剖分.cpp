@@ -48,6 +48,7 @@ void add(int k,int l,int r,int v)
         sum[k]%=mod;
         lazy[k]+=v;
 }
+
 void pushdown(int k,int l,int r,int mid)
 {
         if(!lazy[k])return;
@@ -55,6 +56,7 @@ void pushdown(int k,int l,int r,int mid)
         add(k<<1|1,mid+1,r,lazy[k]);
         lazy[k]=0;
 }
+
 void query(int k,int l,int r,int x,int y,int & ans)
 {
         if(l>y or r<x)return;
@@ -64,6 +66,7 @@ void query(int k,int l,int r,int x,int y,int & ans)
         if(mid>=x)query(k<<1,l,mid,x,y,ans);
         if(mid<y)query(k<<1|1,mid+1,r,x,y,ans);
 }
+
 void modify(int k,int l,int r,int x,int y,int v)
 {
         if(l>y or r<x)return;
@@ -75,6 +78,7 @@ void modify(int k,int l,int r,int x,int y,int v)
         sum[k]=sum[k<<1]+sum[k<<1|1];
         sum[k]%=mod;
 }
+
 void build(int k,int l,int r)
 {
         if(l==r) { sum[k]=num[rev[l]]; return; }
@@ -83,6 +87,7 @@ void build(int k,int l,int r)
         build(k<<1|1,mid+1,r);
         sum[k]=sum[k<<1]+sum[k<<1|1];
 }
+
 void ask(int x,int y)
 {
         while(top[x]!=top[y])
@@ -94,6 +99,7 @@ void ask(int x,int y)
         if(depth[x]>depth[y])swap(x,y);
         query(1,1,seg[0],seg[x],seg[y],ans);
 }
+
 void change(int x,int y,int v)
 {
         while(top[x]!=top[y])
@@ -105,6 +111,7 @@ void change(int x,int y,int v)
         if(depth[x]>depth[y])swap(x,y);
         modify(1,1,seg[0],seg[x],seg[y],v);
 }
+
 int main()
 {
         freopen("树链剖分.in","r",stdin);

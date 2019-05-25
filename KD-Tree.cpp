@@ -9,16 +9,16 @@ const int Maxn=5e5+10;
 const int dim=2;
 const int inf=0x3f3f3f3f;
 struct node{
-        int l,r,zb[dim],maxn[dim],minn[dim];//maxn,minn表示当前节点能维护到的矩阵
+        int l,r,d[dim],maxn[dim],minn[dim];//maxn,minn表示当前节点能维护到的矩阵
         inline void maintain()
         {
                 l=r=0;
                 for(int i=0;i<dim;i++)
-                        maxn[i]=minn[i]=zb[i];
+                        maxn[i]=minn[i]=d[i];
         }
 }tree[2*Maxn];
 int d,root,ans;
-bool operator<(const node & a,const node & b) { return a.zb[d]<b.zb[d]; }
+bool operator<(const node & a,const node & b) { return a.d[d]<b.d[d]; }
 void push_up(int p)
 {
         int son[2]={tree[p].l,tree[p].r};
@@ -46,7 +46,7 @@ int build(int l,int r,int now)
 void insert(int & o,int k,int now)
 {
         if(o==0) { o=k; return; }
-        if(tree[k].zb[now]<tree[o].zb[now])insert(tree[o].l,k,(now+1)%dim);
+        if(tree[k].d[now]<tree[o].d[now])insert(tree[o].l,k,(now+1)%dim);
         else insert(tree[o].r,k,(now+1)%dim);
         push_up(o);
 }
@@ -55,8 +55,8 @@ inline int dis_min(int o,int k)//曼哈顿距离
         int rst=0;
         for(int i=0;i<dim;i++)
         {
-                if(tree[k].zb[i]>tree[o].maxn[i])rst+=tree[k].zb[i]-tree[o].maxn[i];
-                if(tree[k].zb[i]<tree[o].minn[i])rst+=tree[o].minn[i]-tree[k].zb[i];
+                if(tree[k].d[i]>tree[o].maxn[i])rst+=tree[k].d[i]-tree[o].maxn[i];
+                if(tree[k].d[i]<tree[o].minn[i])rst+=tree[o].minn[i]-tree[k].d[i];
         }
         return rst;
 }
@@ -64,13 +64,13 @@ inline int dis_max(int o,int k)
 {
         int rst=0;
         for(int i=0;i<dim;i++)
-                rst+=max(abs(tree[k].zb[i]-tree[o].minn[i]),abs(tree[k].zb[i]-tree[o].maxn[i]));
+                rst+=max(abs(tree[k].d[i]-tree[o].minn[i]),abs(tree[k].d[i]-tree[o].maxn[i]));
         return rst;
 }
 int ansmin,ansmax;
 void query_min(int o,int k)
 {
-        int dm=abs(tree[o].zb[0]-tree[k].zb[0])+abs(tree[o].zb[1]-tree[k].zb[1]);
+        int dm=abs(tree[o].d[0]-tree[k].d[0])+abs(tree[o].d[1]-tree[k].d[1]);
         if(o==k)dm=inf;
         if(dm<ansmin)ansmin=dm;
         int dl=tree[o].l?dis_min(tree[o].l,k):inf;
@@ -88,7 +88,7 @@ void query_min(int o,int k)
 }
 void query_max(int o,int k)
 {
-        int dm=abs(tree[o].zb[0]-tree[k].zb[0])+abs(tree[o].zb[1]-tree[k].zb[1]);
+        int dm=abs(tree[o].d[0]-tree[k].d[0])+abs(tree[o].d[1]-tree[k].d[1]);
         if(dm>ansmax)ansmax=dm;
         int dl=tree[o].l?dis_max(tree[o].l,k):0;
         int dr=tree[o].r?dis_max(tree[o].r,k):0;
