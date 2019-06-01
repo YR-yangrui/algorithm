@@ -1,0 +1,127 @@
+#!/bin/bash
+if [[ "$1" == "-h" ]]
+then
+    echo "---------------------------------------------------------------------------------"
+    echo
+    echo "-h  --help         输出此帮助界面"
+    echo "-a  --ask          按询问模式执行"
+    echo "-y  --yes          复制并替换文件" 
+    echo "-q  --quiet        安静的执行程序"
+    echo "文件名             shell默认跳出参数 并将后面的变量不创建文件夹(且删除此文件目录)"
+    echo
+    echo "例： Mkdir -y a.cpp b.cpp"
+    echo
+    echo "这将不会为a.cpp b.cpp创建目录，且如果有目录也会删掉 询问模式除外"
+    echo
+    echo "---------------------------------------------------------------------------------"
+    exit 0
+fi
+ask=0
+yes=0
+quiet=0
+while getopts ayq opt
+do
+    case "$opt" in
+        a)ask=1 ;;
+        y)yes=1 ;;
+        q)quiet=1 ;;
+        *) echo "未知的参数!"  ;;
+    esac
+done
+shift
+if [ $ask -eq 1 ]
+then
+    echo "以询问模式执行..."
+fi
+if [ $yes -eq 1 ]
+then
+    echo "以yes模式执行..."
+fi
+for file in `ls *.cpp`
+do
+    pre=`echo "$file" | cut -d '.' -f1`
+    if [ $# -ne 0 ]
+    then
+        if  echo "$file" | grep "$*" >/dev/null 2>&1 
+        then
+            if [ $ask -eq 1 ]
+            then
+                if [ -d $pre ]
+                then
+                    echo -e "\033[;33m 找到 $pre 文件夹，是否删除?\033[0m"
+                    read -l opt
+                    if [[ $opt = 'y' ]] || [[ $opt = 'Y' ]]
+                    then
+                        rm -rf $pre
+                    else
+                        echo -e "\033[;32m 保留原文件夹\033[0m"
+                    fi
+                fi
+            else
+                rm -rf $pre
+            fi
+            continue
+        fi
+    fi
+    if [ $quiet -ne 1 ]
+    then
+        echo -e "\033[;32m 正在创建 '$pre' 文件夹 ... \033[0m"
+    fi
+    if [ -d "$pre" ]
+    then 
+        if [ $quiet -ne 1 ]
+        then
+            echo -e "\033[;31m $pre 文件夹已经存在 \033[0m"
+        fi
+    else
+        if [ $ask -eq 1 ]
+        then
+            echo -e "\033[;33m 是否创建 $pre 文件夹?(y/n)\033[0m"
+            read  -l opt
+            if [[ $opt == y ]]|| [[ $opt = 'Y' ]]
+            then
+                mkdir "$pre"
+            else
+                echo -e "\033[;33m 跳过此文件\033[0m"
+                continue
+            fi
+        else
+            mkdir "$pre"
+        fi
+        if [ $quie -ne 1 ]
+        then
+            echo -e "\033[;37m $pre 文件夹创建成功 \033[0m"
+        fi
+    fi
+    if [ $quiet -ne 1 ]
+    then
+        echo -e "\033[;32m 正在复制 $file 到 $pre 文件夹 ... \033[0m"
+    fi
+    if [ -f "$pre/$file" ]
+    then
+        if [ $quiet -ne 1 ]
+        then
+            echo -e "\033[;31m 文件 $file 已经存在! \033[0m"
+        fi
+            if [ $yes -eq 1 ]
+            then
+                if [ $quiet -ne 1]
+                then
+                    echo -e "\033[;32强制替换文件 \033[0m"
+                fi
+                cp -i "$file" "$pre"
+            elif [ $ask -eq 1 ]
+            then
+                echo -e "\033[;33m 是否强制替换?(y/n) \033[0m"
+                read -l opt
+                if [[ $opt == y ]] || [[ $opt = 'Y' ]]
+                then
+                    cp -i "$file" "$pre"
+                fi
+            fi
+    else 
+        cp "$file" "$pre"
+    fi
+    echo
+done
+echo -e "\033[;31m 程序执行结束\033[0m"
