@@ -88,7 +88,7 @@ do
         else
             mkdir "$pre"
         fi
-        if [ $quie -ne 1 ]
+        if [ $quiet -ne 1 ]
         then
             echo -e "\033[;37m $pre 文件夹创建成功 \033[0m"
         fi
@@ -105,18 +105,18 @@ do
         fi
             if [ $yes -eq 1 ]
             then
-                if [ $quiet -ne 1]
+                if [ $quiet -ne 1 ]
                 then
-                    echo -e "\033[;32强制替换文件 \033[0m"
+                    echo -e "\033[;32m 强制替换文件 \033[0m"
                 fi
-                cp -i "$file" "$pre"
+                cp "$file" "$pre"
             elif [ $ask -eq 1 ]
             then
                 echo -e "\033[;33m 是否强制替换?(y/n) \033[0m"
-                read -l opt
+                read opt
                 if [[ $opt == y ]] || [[ $opt = 'Y' ]]
                 then
-                    cp -i "$file" "$pre"
+                    cp "$file" "$pre"
                 fi
             fi
     else 
