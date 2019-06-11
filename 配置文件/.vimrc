@@ -8,6 +8,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tomasr/molokai'
 Plugin 'vim-scripts/phd'
+Plugin 'vim-scripts/indenthtml.vim.git'
 "Plugin 'Lokaltog/vim-powerline'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'nathanaelkane/vim-indent-guides'
@@ -20,6 +21,7 @@ Plugin 'vim-scripts/indexer.tar.gz'
 Plugin 'vim-scripts/DfrankUtil'
 Plugin 'vim-scripts/vimprj'
 Plugin 'dyng/ctrlsf.vim'
+Plugin 'honza/vim-snippets.git'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/DrawIt'
@@ -52,7 +54,12 @@ set fdm=marker
 "}}}
 "{{{设置
 "set showmatch "自动匹配又括号
-"set tabstop=4
+set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+packadd termdebug
+set showtabline=1
+set smarttab
 set helplang=CN
 set smartindent "智能对齐
 set autoindent "自动对齐
@@ -71,8 +78,24 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "{{{映射
 map <F7> gg /freopen<CR> Vj;cc gg VG "+y gg/freopen<CR>Vj;cu
 map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r1<Esc>
-map <F10> <Esc>:!./%:r1<Esc>
+function! EXecute()
+
+    if &filetype == "cpp"
+        execute "!./%:r1>%:r.out"
+        !cat %:r.out
+    endif
+    "elseif &filetype == 'sh'
+        "w
+        "!./%
+    "endif
+endfunction
+
+map<F10> <Esc>:!./%:r1<Esc> :!cat %:r.out<Esc>
+"map <F10> :call EXecute()<CR>
+map <c-F10> <Esc>:!./%:r1<Esc>
 map <c-g> <Esc>:!gdb -q %:r1<Esc>
+map <c-F7> <Esc>ggVG"+y<CR>
+"map <c-g> <Esc>:Termdebug %:r1<esc>
 map <leader>ww  <esc>:w! ~/temp/%<Esc>
 map <leader>to <esc>:vsp ~/temp/%<esc>
 map <leader>oi <esc>:vsp %:r.in<esc>
@@ -120,32 +143,63 @@ set ruler
 set cursorline
 set cursorcolumn
 "}}}
-"{{{ 配色方案
-if(has("gui_running"))
-"set background=dark
-"colorscheme solarized
-"let g:space_vim_dark_background =234
-"colorscheme space-vim-dark
-"hi Comment guifg=#5C6370 ctermfg=59
-"set termguicolors
-"hi LineNr ctermbg=NONE guibg=NONE
-colorscheme molokai
-"colorscheme phd
-endif
-"}}}
-"{{{ 设置 gvim 显示字体
-if(has("gui_running"))
-set guifont=YaHei\ Consolas\ Hybrid\ 11.5
-"let g:Powerline_colorscheme='space-vim-dark'
-else
-"let g:Powerline_colorscheme='solarized256'
-endif
-syntax keyword cppSTLtype initializer_list
-"}}}
+"{{{ YCM 补全
+
+"" YCM 补全菜单配色
+"" 菜单
+highlight Pmenu ctermfg=2 ctermbg=4 guifg=#005f87 guibg=#EEE8D5
+"" 选中项
+highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
+
+"" 补全功能在注释中同样有效
+let g:ycm_complete_in_comments=1
+
+"" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
+let g:ycm_confirm_extra_conf=0
+
+"" 开启 YCM 标签补全引擎
+let g:ycm_collect_identifiers_from_tags_files=0
+""" 引入 C++ 标准库 tags
+"set tags+=/data/misc/software/app/vim/stdcpp.tags
+"set tags+=/data/misc/software/app/vim/sys.tags
+
+"" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
+inoremap <leader>; <C-x><C-o>
+
+"" 补全内容不以分割子窗口形式出现，只显示补全列表
+set completeopt-=preview
+
+"" 从第一个键入字符就开始罗列匹配项
+let g:ycm_min_num_of_chars_for_completion=1
+
+"" 禁止缓存匹配项，每次都重新生成匹配项
+let g:ycm_cache_omnifunc=0
+
+"" 语法关键字补全
+let g:ycm_seed_identifiers_with_syntax=1
+
+"" <<
+ 
+"" >>
+"" 由接口快速生成实现框架
+
+"" 成员函数的实现顺序与声明顺序一致
+let g:able_protodef_sorting=1
+
+"" <<
+
+"" >>
+"" 库信息参考
+ 
+"" 启用:Man命令查看各类man信息
+source $VIMRUNTIME/ftplugin/man.vim
+
+"" 定义:Man命令查看各类man信息的快捷键
+nmap <Leader>man :Man 3 <cword><CR>
+""}}}
 "{{{缩进设置
 filetype indent on
 set expandtab
-set nu
 "{{{匹配括号
 "let g:indent_guides_enable_on_vim_startup=1
 "let g:indent_guides_start_level=2
@@ -185,6 +239,7 @@ endfunction
 autocmd BufNewFile *.cpp :call SetTitle()
 function! SetTitle()
         if &filetype =='cpp'
+            set nu
                 if(CurDir()=='~/YR/USACO')
                         call setline(1,"/*")
                         call append(line("."),"ID:galaxy_6")
@@ -193,26 +248,12 @@ function! SetTitle()
                         call append(line(".")+3,"*/")
                         call append(line(".")+4,"#include<iostream>")
                         call append(line(".")+5,"#include<cstdio>")
-                        call append(line(".")+6,"struct IO{")
-                        call append(line(".")+7,"       template<typename T>")
-                        call append(line(".")+8,"               IO & operator>>(T&res)")
-                        call append(line(".")+9,"               {")
-                        call append(line(".")+10,"                      char ch=getchar();")
-                        call append(line(".")+11,"                      T q=1;")
-                        call append(line(".")+12,"                      while(ch<'0' or ch>'9'){if(ch=='-')q=-q;ch=getchar();}") 
-                        call append(line(".")+13,"                      res=(ch^48);") 
-                        call append(line(".")+14,"                      while((ch=getchar())>='0' and ch<='9')")
-                        call append(line(".")+15,"                      res=(res<<1)+(res<<3)+(ch^48);") 
-                        call append(line(".")+16,"                      res*=q;") 
-                        call append(line(".")+17,"                      return *this;") 
-                        call append(line(".")+18,"              }")
-                        call append(line(".")+19,"}cin;")
-                        call append(line(".")+20,"using std::cout; using std::endl;")
-                        call append(line(".")+21,"int main()")
-                        call append(line(".")+22,"{")
-                        call append(line(".")+23,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+24,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                        call append(line(".")+25,"}")
+                        call append(line(".")+6,"using namespace std;")
+                        call append(line(".")+7,"int main()")
+                        call append(line(".")+8,"{")
+                        call append(line(".")+9,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+10,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+11,"}")
                 elseif expand("%")=="dp.cpp"
                         call setline(1,"/*******************************")
                         call append(line("."),"Author:galaxy yr")
@@ -251,26 +292,12 @@ function! SetTitle()
                         call append(line(".")+3,"*******************************/")
                         call append(line(".")+4,"#include<iostream>")
                         call append(line(".")+5,"#include<cstdio>")
-                        call append(line(".")+6,"struct IO{")
-                        call append(line(".")+7,"       template<typename T>")
-                        call append(line(".")+8,"               IO & operator>>(T&res)")
-                        call append(line(".")+9,"               {")
-                        call append(line(".")+10,"                      char ch=getchar();")
-                        call append(line(".")+11,"                      T q=1;")
-                        call append(line(".")+12,"                      while(ch<'0' or ch>'9'){if(ch=='-')q=-q;ch=getchar();}") 
-                        call append(line(".")+13,"                      res=(ch^48);") 
-                        call append(line(".")+14,"                      while((ch=getchar())>='0' and ch<='9')")
-                        call append(line(".")+15,"                      res=(res<<1)+(res<<3)+(ch^48);") 
-                        call append(line(".")+16,"                      res*=q;") 
-                        call append(line(".")+17,"                      return *this;") 
-                        call append(line(".")+18,"              }")
-                        call append(line(".")+19,"}cin;")
-                        call append(line(".")+20,"using std::cout; using std::endl;")
-                        call append(line(".")+21,"int main()")
-                        call append(line(".")+22,"{")
-                        call append(line(".")+23,"        freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+24,"        freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                        call append(line(".")+25,"}")
+                        call append(line(".")+6,"using namespace std;")
+                        call append(line(".")+7,"int main()")
+                        call append(line(".")+8,"{")
+                        call append(line(".")+9,"        freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+10,"        freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+11,"}")
                 endif
         endif
         autocmd BufNewFile * normal G
@@ -281,7 +308,7 @@ nmap ner <esc>:NERDTreeToggle<cr>
 " 设置 NERDTree 子窗口宽度
 let NERDTreeWinSize=22
 " 设置 NERDTree 子窗口位置
-let NERDTreeWinPos="right"
+let NERDTreeWinPos="left"
 " 显示隐藏文件
 let NERDTreeShowHidden=1
 " NERDTree 子窗口中不显示冗余帮助信息
@@ -361,11 +388,11 @@ let g:SignatureMap = {
 " 标签列表
 
 " 设置 tagbar 子窗口的位置出现在主编辑区的左边
-let tagbar_left=1
+let tagbar_right=1
 " 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag
 nnoremap <Leader>ilt :TagbarToggle<CR>
 " 设置标签子窗口的宽度
-let tagbar_width=32
+let tagbar_width=20
 " tagbar 子窗口中不显示冗余帮助信息
 let g:tagbar_compact=1
 " 设置 ctags 对哪些代码标识符生成标签
@@ -476,71 +503,7 @@ nnoremap <Leader>rc :call Replace(1, 0, input('Replace '.expand('<cword>').' wit
 nnoremap <Leader>rcw :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' with: '))<CR>
 
-" <<
-
-" 模板补全
-" UltiSnips 的 tab 键与 YCM 冲突，重新设定
-"let g:UltiSnipsSnippetDirectories=["mysnippets"]
-"let g:UltiSnipsExpandTrigger="<leader><tab>"
-"let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
-"let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
-
-"" >>
 "}}}
-"{{{ YCM 补全
-
-"" YCM 补全菜单配色
-"" 菜单
-highlight Pmenu ctermfg=2 ctermbg=4 guifg=#005f87 guibg=#EEE8D5
-"" 选中项
-highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
-
-"" 补全功能在注释中同样有效
-let g:ycm_complete_in_comments=1
-
-"" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
-let g:ycm_confirm_extra_conf=0
-
-"" 开启 YCM 标签补全引擎
-let g:ycm_collect_identifiers_from_tags_files=0
-""" 引入 C++ 标准库 tags
-"set tags+=/data/misc/software/app/vim/stdcpp.tags
-"set tags+=/data/misc/software/app/vim/sys.tags
-
-"" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
-inoremap <leader>; <C-x><C-o>
-
-"" 补全内容不以分割子窗口形式出现，只显示补全列表
-set completeopt-=preview
-
-"" 从第一个键入字符就开始罗列匹配项
-let g:ycm_min_num_of_chars_for_completion=1
-
-"" 禁止缓存匹配项，每次都重新生成匹配项
-let g:ycm_cache_omnifunc=0
-
-"" 语法关键字补全
-let g:ycm_seed_identifiers_with_syntax=1
-
-"" <<
- 
-"" >>
-"" 由接口快速生成实现框架
-
-"" 成员函数的实现顺序与声明顺序一致
-let g:able_protodef_sorting=1
-
-"" <<
-
-"" >>
-"" 库信息参考
- 
-"" 启用:Man命令查看各类man信息
-source $VIMRUNTIME/ftplugin/man.vim
-
-"" 定义:Man命令查看各类man信息的快捷键
-nmap <Leader>man :Man 3 <cword><CR>
-""}}}
 "{{{html自动补全
 ""autocmd BufNewFile *  setlocal filetype=html
 if &filetype =='html'
@@ -579,9 +542,9 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 nmap sp <Plug>(ale_previous_wrap)
 nmap sn <Plug>(ale_next_wrap)
 "<Leader>s触发/关闭语法检查
-nmap <Leader>s :ALEToggle<CR>
+"nmap <Leader>s :ALEToggle<CR>
 "<Leader>d查看错误或警告的详细信息
-nmap <Leader>d :ALEDetail<CR>
+"nmap <Leader>d :ALEDetail<CR>
 "文件内容发生变化时不进行检查
 let g:ale_lint_on_text_changed = 'never'
 "打开文件时不进行检查
@@ -589,15 +552,54 @@ let g:ale_lint_on_enter = 0
 """}}}
 "{{{sdcv字典
 "use sdcv instead man
-set keywordprg=sdcv\ -u\ 朗道英汉字典5.0
-" F key call sdcv 
+set keywordprg=translate
+" fy key call sdcv 
 function! Mydict()
     let retstr=system('sdcv '.expand("<cword>"))
     windo if expand("%")=="dict-win" |q!|endif
-    30vsp dict-win
+    20sp dict-win
     setlocal buftype=nofile bufhidden=hide noswapfile
     1s/^/\=retstr/
     1
 endfunction
-nnoremap F :call Mydict()<CR>
+nnoremap fy :call Mydict()<CR>
+"}}}
+"{{{html
+let g:html_indent_script1 = "inc"
+let g:html_indent_style1 = "inc"
+let g:html_indent_inctags = "html,body,head,tbody"
+"}}}
+"{{{代码管理
+let g:UltiSnipsExpandTrigger="<c-l>"
+"}}}
+"{{{ 配色方案
+if(has("gui_running"))
+set background=dark
+colorscheme solarized
+else
+colorscheme ir_black
+endif
+"let g:space_vim_dark_background =234
+"colorscheme space-vim-dark
+"hi Comment guifg=#5C6370 ctermfg=59
+"set termguicolors
+"hi LineNr ctermbg=NONE guibg=NONE
+"colorscheme phd
+"}}}
+"{{{ 设置 gvim 显示字体
+if(has("gui_running"))
+set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+"let g:Powerline_colorscheme='space-vim-dark'
+else
+"let g:Powerline_colorscheme='solarized256'
+endif
+syntax keyword cppSTLtype initializer_list
+"}}}
+"{{{
+function! Search_Function()
+    let temp=expand("<cword>")
+    vsp ~/book/c++库函数.txt
+    :call search(temp,"W")
+endfunction
+map SF :call Search_Function()<CR>
 "}}}
