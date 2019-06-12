@@ -5,63 +5,85 @@ then
     echo
     echo "-h  --help         输出此帮助界面"
     echo "-a  --ask          按询问模式执行"
-    echo "-y  --yes          复制并替换文件" 
     echo "-q  --quiet        安静的执行程序"
+    echo "-c  --copy         仅仅将文件复制进文件夹"
     echo "文件名             shell默认跳出参数 并将后面的变量不创建文件夹(且删除此文件目录)"
     echo
-    echo "例： Mkdir -y a.cpp b.cpp"
+    echo "例： Mkdir a.cpp b.cpp"
     echo
-    echo "这将不会为a.cpp b.cpp创建目录，且如果有目录也会删掉 询问模式除外"
+    echo "这将不会为a.cpp b.cpp创建目录，且如果也会删掉和文件 询问模式除外"
+    echo -e "\033[;31m默认复制并替换文件 \033[;0m"
     echo
     echo "---------------------------------------------------------------------------------"
     exit 0
 fi
 ask=0
-yes=0
 quiet=0
-while getopts ayq opt
+copy=0
+while getopts ayqc opt
 do
     case "$opt" in
         a)ask=1 ;;
-        y)yes=1 ;;
         q)quiet=1 ;;
+        c)copy=1 ;;
         *) echo "未知的参数!"  ;;
     esac
 done
-shift
+if echo "$1" | grep "-" >/dev/null 2>&1
+then
+    shift
+fi
 if [ $ask -eq 1 ]
 then
     echo "以询问模式执行..."
 fi
-if [ $yes -eq 1 ]
+if [ $copy -eq 1 ]
 then
-    echo "以yes模式执行..."
+    echo "以copy模式执行..."
 fi
 for file in `ls *.cpp`
 do
     pre=`echo "$file" | cut -d '.' -f1`
     if [ $# -ne 0 ]
     then
-        if  echo "$file" | grep "$*" >/dev/null 2>&1 
-        then
-            if [ $ask -eq 1 ]
+        for list in "$@"
+        do
+            if [[ $list = $file ]]
+                #if  echo "$file" | grep "$*" >/dev/null 2>&1 
             then
-                if [ -d $pre ]
+                if [ $ask -eq 1 ]
                 then
-                    echo -e "\033[;33m 找到 $pre 文件夹，是否删除?\033[0m"
-                    read -l opt
-                    if [[ $opt = 'y' ]] || [[ $opt = 'Y' ]]
+                    if [ -d $pre ]
                     then
-                        rm -rf $pre
-                    else
-                        echo -e "\033[;32m 保留原文件夹\033[0m"
+                        echo -e "\033[;33m 找到 $pre 文件夹，是否删除?\033[0m"
+                        read -l opt
+                        if [[ $opt = 'y' ]] || [[ $opt = 'Y' ]]
+                        then
+                            echo -e "\033[;31m 删除 $pre 文件夹.\033[0m"
+                            echo -e "\033[;31m 删除 $file 文件.\033[0m"
+                            echo
+                            rm -rf $pre
+                            rm $file
+                        else
+                            echo -e "\033[;32m 保留原文件夹\033[0m"
+                        fi
                     fi
+                else
+                    echo -e "\033[;31m 删除 $pre 文件夹.\033[0m"
+                    echo -e "\033[;31m 删除 $file 文件.\033[0m"
+                    echo
+                    rm -rf $pre
+                    rm $file
                 fi
-            else
-                rm -rf $pre
+                continue 2
             fi
-            continue
-        fi
+        done
+    fi
+    if [ $copy -eq 1 ]
+    then
+        echo -e "\033[;33m 复制 $file 进入 $pre 文件夹...\033[0m"
+        cp $file $pre
+        continue
     fi
     if [ $quiet -ne 1 ]
     then
@@ -103,22 +125,19 @@ do
         then
             echo -e "\033[;31m 文件 $file 已经存在! \033[0m"
         fi
-            if [ $yes -eq 1 ]
+        if [ $ask -eq 1 ]
+        then
+            echo -e "\033[;33m 是否强制替换?(y/n) \033[0m"
+            read opt
+            if [[ $opt == y ]] || [[ $opt = 'Y' ]]
             then
-                if [ $quiet -ne 1 ]
-                then
-                    echo -e "\033[;32m 强制替换文件 \033[0m"
-                fi
                 cp "$file" "$pre"
-            elif [ $ask -eq 1 ]
-            then
-                echo -e "\033[;33m 是否强制替换?(y/n) \033[0m"
-                read opt
-                if [[ $opt == y ]] || [[ $opt = 'Y' ]]
-                then
-                    cp "$file" "$pre"
-                fi
             fi
+        elif [ $quiet -ne 1 ]
+        then
+            echo -e "\033[;32m 强制替换文件 \033[0m"
+        fi
+        cp "$file" "$pre"
     else 
         cp "$file" "$pre"
     fi
