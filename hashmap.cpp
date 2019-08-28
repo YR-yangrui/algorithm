@@ -1,3 +1,7 @@
+#include<cstring>
+#include<string>
+#include<cassert>
+using namespace std;
 class Hash{
 	private :
 		const static size_t maxn=100000;
@@ -9,12 +13,19 @@ class Hash{
 		size_t* stk;
 		size_t top;
 	public :
-		hash()
+		Hash()
 		{
 			tot=top=0;
 			net=new size_t[maxn]; num=new size_t[maxn]; adj=new size_t[maxn]; stk=new size_t[maxn];
 			memset(net,0,sizeof net); memset(num,0,sizeof num); memset(adj,0,sizeof adj); memset(stk,0,sizeof stk);
 	       	}
+                ~Hash()
+                {
+                    delete [] net;
+                    delete [] num;
+                    delete [] adj;
+                    delete [] stk;
+                }
 		void insert(size_t key)
 		{
 #ifdef find
