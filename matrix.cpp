@@ -24,15 +24,16 @@ int ksm(int a,int b)
 }
 struct Matrix{
     int a[maxn][maxn];
-    Matrix() { memset(a,0,sizeof a); }
-    Matrix(int k)
+    Matrix() { memset(a,0,sizeof a); }//初始化
+    Matrix(int k)//初始化k阶单位矩阵
     {
         k=min(k,n);
         memset(a,0,sizeof a);
         for(int i=1;i<=k;i++) a[i][i]=1;
     }
     int * operator[](const int i){ return a[i]; }
-    void print()const
+    const int * operator[](const int i)const { return a[i]; }
+    void print()const//打印矩阵
     {
         for(int i=1;i<=n;i++)
         {
@@ -41,14 +42,16 @@ struct Matrix{
             cout<<endl;
         }
     }
-    void swap(const int x,const int y) { for(int i=1;i<=n;i++)swap(a[x][i],a[y][i]); }
-    void mul(const int x,const int k) { for(int i=1;i<=n;i++) a[x][i]=(1ll*a[x][i]*k)%mod; }
-    void md(const int x,const int y,int k)
+    /*{{{初等行变换*/
+    void swap(const int x,const int y) { for(int i=1;i<=n;i++)swap(a[x][i],a[y][i]); }//交换行和列
+    void mul(const int x,const int k) { for(int i=1;i<=n;i++) a[x][i]=(1ll*a[x][i]*k)%mod; }//某一行乘上k
+    void md(const int x,const int y,int k)//把第y行乘上k，再加打第x行上
     {
         for(int i=1;i<=n;i++)
             a[x][i]=(a[x][i]+1ll*a[y][i]*k%mod+mod)%mod;
     }
-    Matrix operator*(const Matrix & p)const
+    /*}}}*/
+    Matrix operator*(const Matrix & p)const//矩阵乘法
     {
         Matrix t;
         for(int k=1;k<=n;k++)
@@ -57,7 +60,15 @@ struct Matrix{
                     t[i][j]=(1ll*a[i][k]*a[k][j]+t[i][j])%mod;
         return t;
     }
-    bool get_inv(Matrix &t)
+    Matrix operator+(const Matrix & p)const//矩阵加法
+    {
+        Matrix t;
+        for(int i=1;i<=n;i++)
+            for(int j=1;j<=n;j++)
+                t[i][j]=(a[i][j]+p[i][j])%mod;
+        return t;
+    }
+    bool get_inv(Matrix &t)//矩阵求逆
     {
         memset(t.a,0,sizeof t.a);
         for(int i=1;i<=n;i++) t.a[i][i]=1;
