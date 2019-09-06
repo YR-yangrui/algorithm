@@ -4,6 +4,7 @@
 export PATH=$PATH:/home/glaxy_yr/Downloads/cmake-3.13.3/bin
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
+export YR=/home/yr/
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -11,7 +12,7 @@ export ZSH=$HOME/.oh-my-zsh
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # 主题
 #ZSH_THEME="agnoster"
-ZSH_THEME="ys"
+ZSH_THEME="myys"
 #ZSH_THEME="random" # (...please let it be pie... please be some pie..)
 
 # Set list of themes to pick from when loading at random
@@ -72,12 +73,13 @@ plugins=(
   ruby
   bundler
   osx
-  vim-interacton
   autojump
   extract
   web-search
   vi-mode
   wd
+  zsh-autosuggestions
+  catimg
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -113,16 +115,23 @@ export LANG=en_US.UTF-8
  alias cls='clear'
  alias zshrc="vim ~/.zshrc"
  alias vi='gvim'
+ alias ff='firefox'
  alias -s txt=vi
  alias -s cpp=vi
- alias -s md=vi
+ alias -s pdf=evince
+ alias -s md=typora
  alias -s c=vi
  alias -s gz='tar -xzvf'
  alias -s tgz='tar -xzvf'
  alias -s zip='unzip'
  alias -s bz2='tar -xjvf'
- alias fy='dict -d langdao-ec'
- alias fyy='dict -d langdao-ce'
+ alias -s h
+ alias fy='sdcv -u 朗道英汉字典5.0'
+ alias Fy='sdcv -u 朗道汉英字典5.0'
+ alias unrar="rar"
+ bindkey ',' autosuggest-accept
+ # 后台运行程序 : nohup a.sh &
  #hash
- hash -d yr="/home/glaxy_yr/YR"
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && . ~/.autojump/etc/profile.d/autojump.sh
+
+eval $(thefuck --alias)

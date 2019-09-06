@@ -6,6 +6,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'ianva/vim-youdao-translater'
 Plugin 'tomasr/molokai'
 Plugin 'vim-scripts/phd'
 Plugin 'vim-scripts/indenthtml.vim.git'
@@ -32,6 +33,7 @@ Plugin 'derekwyatt/vim-protodef'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
 Plugin 'gcmt/wildfire.vim'
+Plugin 'vimcdoc-1.5.0'
 Plugin 'sjl/gundo.vim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'godlygeek/tabular'
@@ -40,8 +42,9 @@ Plugin 'lilydjwg/fcitx.vim'
 "markdown 即时浏览
 Plugin 'iamcco/markdown-preview.vim'
 Plugin 'iamcco/mathjax-support-for-mkdp'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'vim-airline/vim-airline'
+"Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'vimwiki/vimwiki'
 " 插件列表结束
 call vundle#end()
 filetype plugin indent on
@@ -61,6 +64,7 @@ packadd termdebug
 set showtabline=1
 set smarttab
 set helplang=CN
+set nu
 set smartindent "智能对齐
 set autoindent "自动对齐
 set ai! "设置自动缩进
@@ -76,32 +80,28 @@ let mapleader=";"
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "}}}
 "{{{映射
-map <F7> gg /freopen<CR> Vj;cc gg VG "+y gg/freopen<CR>Vj;cu
-map <F9> <Esc>:w<Esc>:!g++ -g % -o %:r1<Esc>
-function! EXecute()
-
-    if &filetype == "cpp"
-        execute "!./%:r1>%:r.out"
-        !cat %:r.out
-    endif
-    "elseif &filetype == 'sh'
-        "w
-        "!./%
-    "endif
-endfunction
-
+map <F7> gg /freopen<CR>Vj;ccggVG"+ygg/freopen<CR>Vj;cu:w<CR>
+map <F9> :w<Esc>:!g++ -g % -o %:r1<Esc>
 map<F10> <Esc>:!./%:r1<Esc> :!cat %:r.out<Esc>
+"{{{Cp function
+function! Cp()
+    let st=system('get_time')
+    let temp=system("./".expand("%:r").expand("1"))
+    let ed=system('get_time')
+    let _Time=ed-st
+    echo temp
+    echo "程序存活时间:"_Time/1000
+endfunction
+map <c-F10> :call Cp()<Cr>
+"}}}
 "map <F10> :call EXecute()<CR>
-map <c-F10> <Esc>:!./%:r1<Esc>
 map <c-g> <Esc>:!gdb -q %:r1<Esc>
 map <c-F7> <Esc>ggVG"+y<CR>
 "map <c-g> <Esc>:Termdebug %:r1<esc>
-map <leader>ww  <esc>:w! ~/temp/%<Esc>
+map <leader>we  <esc>:w! ~/temp/%<Esc>
 map <leader>to <esc>:vsp ~/temp/%<esc>
 map <leader>oi <esc>:vsp %:r.in<esc>
 map <leader>oo <esc>:vsp %:r.out<esc>
-map <leader>wi <esc>:!cat %:r.in<esc>
-map <leader>wo <esc>:!cat %:r.out<esc>
 map <leader>bash <esc>:ConqueTermSplit bash<esc>
 map ,n <esc>:tabn<esc>
 map ,p <esc>:tabp<esc>
@@ -110,6 +110,8 @@ map <leader>hh <c-w><
 map <c-a> ggVG
 "<leader>cc 紧贴代码加注释
 "<leader>cb 代码最前面加注释
+"<leader>cs 性感注释
+"<leader>ca 切换注释方式
 "<leader>cu 解开注释
 "{{{快速切换窗口
 nnoremap <Leader>lw <c-w>l
@@ -132,6 +134,7 @@ set guioptions-=m
 set guioptions-=T
 "}}}
 "{{{其他搜索 vim命令补全
+set nocompatible
 set incsearch
 set ignorecase
 set wildmenu
@@ -239,7 +242,6 @@ endfunction
 autocmd BufNewFile *.cpp :call SetTitle()
 function! SetTitle()
         if &filetype =='cpp'
-            set nu
                 if(CurDir()=='~/YR/USACO')
                         call setline(1,"/*")
                         call append(line("."),"ID:galaxy_6")
@@ -251,8 +253,8 @@ function! SetTitle()
                         call append(line(".")+6,"using namespace std;")
                         call append(line(".")+7,"int main()")
                         call append(line(".")+8,"{")
-                        call append(line(".")+9,"       freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+10,"       freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+9,"    freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+10,"    freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
                         call append(line(".")+11,"}")
                 elseif expand("%")=="dp.cpp"
                         call setline(1,"/*******************************")
@@ -295,8 +297,8 @@ function! SetTitle()
                         call append(line(".")+6,"using namespace std;")
                         call append(line(".")+7,"int main()")
                         call append(line(".")+8,"{")
-                        call append(line(".")+9,"        freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+10,"        freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+                        call append(line(".")+9,"    freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+                        call append(line(".")+10,"    freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
                         call append(line(".")+11,"}")
                 endif
         endif
@@ -304,7 +306,7 @@ function! SetTitle()
 endfunction
 "}}}
 "{{{NERDTree
-nmap ner <esc>:NERDTreeToggle<cr>
+nmap <leader>ner <esc>:NERDTreeToggle<cr>
 " 设置 NERDTree 子窗口宽度
 let NERDTreeWinSize=22
 " 设置 NERDTree 子窗口位置
@@ -552,17 +554,19 @@ let g:ale_lint_on_enter = 0
 """}}}
 "{{{sdcv字典
 "use sdcv instead man
-set keywordprg=translate
+set keywordprg=trans
 " fy key call sdcv 
 function! Mydict()
     let retstr=system('sdcv '.expand("<cword>"))
     windo if expand("%")=="dict-win" |q!|endif
-    20sp dict-win
+    10sp dict-win
     setlocal buftype=nofile bufhidden=hide noswapfile
     1s/^/\=retstr/
     1
+    :wincmd j
 endfunction
 nnoremap fy :call Mydict()<CR>
+nnoremap <leader>fo :close 1<CR>
 "}}}
 "{{{html
 let g:html_indent_script1 = "inc"
@@ -595,11 +599,16 @@ else
 endif
 syntax keyword cppSTLtype initializer_list
 "}}}
-"{{{
+"SF function{{{
 function! Search_Function()
     let temp=expand("<cword>")
     vsp ~/book/c++库函数.txt
     :call search(temp,"W")
 endfunction
 map SF :call Search_Function()<CR>
+"}}}
+"{{{ vim-youdao-translater
+vnoremap <silent> <C-T> :<C-u>Ydv<CR>
+nnoremap <silent> <C-T> :<C-u>Ydc<CR>
+noremap <leader>yd :<C-u>Yde<CR>
 "}}}
