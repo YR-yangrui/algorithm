@@ -19,7 +19,6 @@ void add(int u,int v,int w)
 void djikstra(int start)
 {
         memset(dis,127,sizeof dis);
-        vis[start]=1;
         dis[start]=0;
         priority_queue<pair<int,int>>q;
         q.push(make_pair(0,start));

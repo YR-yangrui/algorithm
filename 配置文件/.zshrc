@@ -134,4 +134,3 @@ export LANG=en_US.UTF-8
  #hash
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && . ~/.autojump/etc/profile.d/autojump.sh
 
-eval $(thefuck --alias)
