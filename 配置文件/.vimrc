@@ -5,6 +5,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 " vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'ianva/vim-youdao-translater'
 Plugin 'tomasr/molokai'
@@ -28,7 +29,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/DrawIt'
 Plugin 'SirVer/ultisnips'
 Plugin 'liuchengxu/space-vim-dark'
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 Plugin 'derekwyatt/vim-protodef'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
@@ -69,7 +70,7 @@ set smartindent "智能对齐
 set autoindent "自动对齐
 set ai! "设置自动缩进
 setl efm=%A%f:%l:\ %m,%-Z%p^,%-C%.%#
-set makeprg=g++\ -Wall\ \ %
+set makeprg=g++\ -Wall\ -o\ a.cpp
 set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 let mapleader=";"
 "代码补全
@@ -81,8 +82,8 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "}}}
 "{{{映射
 map <F7> gg /freopen<CR>Vj;ccggVG"+ygg/freopen<CR>Vj;cu:w<CR>
-map <F9> :w<Esc>:!g++ -g % -o %:r1<Esc>
-map<F10> <Esc>:!./%:r1<Esc> :!cat %:r.out<Esc>
+map <F9> :w<Esc>:!g++ -Wall -g '%' -o '%:r1'<Esc>
+map<F10> <Esc>:!./'%:r1'<Esc> :!cat '%:r'.out<Esc>
 "{{{Cp function
 function! Cp()
     let st=system('get_time')
@@ -95,19 +96,17 @@ endfunction
 map <c-F10> :call Cp()<Cr>
 "}}}
 "map <F10> :call EXecute()<CR>
-map <c-g> <Esc>:!gdb -q %:r1<Esc>
+map <c-g> <Esc>:!gdb -q '%:r1'<Esc>
 map <c-F7> <Esc>ggVG"+y<CR>
 "map <c-g> <Esc>:Termdebug %:r1<esc>
-map <leader>we  <esc>:w! ~/temp/%<Esc>
-map <leader>to <esc>:vsp ~/temp/%<esc>
+map <leader>we  <esc>:w! ~/.temp/%<Esc>
+map <leader>to <esc>:vsp ~/.temp/%<esc>
 map <leader>oi <esc>:vsp %:r.in<esc>
 map <leader>oo <esc>:vsp %:r.out<esc>
-map <leader>bash <esc>:ConqueTermSplit bash<esc>
 map ,n <esc>:tabn<esc>
 map ,p <esc>:tabp<esc>
 map <leader>hl <c-w>>
 map <leader>hh <c-w><
-map <c-a> ggVG
 "<leader>cc 紧贴代码加注释
 "<leader>cb 代码最前面加注释
 "<leader>cs 性感注释
@@ -167,7 +166,7 @@ let g:ycm_collect_identifiers_from_tags_files=0
 "set tags+=/data/misc/software/app/vim/sys.tags
 
 "" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
-inoremap <leader>; <C-x><C-o>
+"inoremap <leader>; <C-x><C-o>
 
 "" 补全内容不以分割子窗口形式出现，只显示补全列表
 set completeopt-=preview
@@ -198,7 +197,7 @@ let g:able_protodef_sorting=1
 source $VIMRUNTIME/ftplugin/man.vim
 
 "" 定义:Man命令查看各类man信息的快捷键
-nmap <Leader>man :Man 3 <cword><CR>
+"nmap <Leader>man :Man 3 <cword><CR>
 ""}}}
 "{{{缩进设置
 filetype indent on
@@ -216,15 +215,15 @@ fun! ToggleFullscreen()
 	call system("wmctrl -ir ".v:windowid." -b toggle,fullscreen")
 endf
 "全屏开关
-map <silent> <F11> :call ToggleFullscreen()<CR>
+"map <silent> <F11> :call ToggleFullscreen()<CR>
 "自动全屏
-autocmd VimEnter * call ToggleFullscreen()
+"autocmd VimEnter * call ToggleFullscreen()
 "}}}
 "{{{markdown 即时浏览快捷键
 "MarkdownPreview
 "MarkdownPreviewStop
 nmap <leader>mo <esc>:MarkdownPreview<esc>
-imap <leader>mo <esc>:MarkdownPreview<esc>
+"imap <leader>mo <esc>:MarkdownPreview<esc>
 nmap <leader>mc <esc>:StopMarkdownPreview><esc>
 nmap <leader>mc <esc>:StopMarkdownPreview<esc>
 "}}}
@@ -266,26 +265,21 @@ function! SetTitle()
                         call append(line(".")+5,"#include<string>")
                         call append(line(".")+6,"#include<ctime>")
                         call append(line(".")+7,"#include<cstdlib>")
-                        call append(line(".")+8,"#include<iostream>")
+                        call append(line(".")+8,"#include<cstdio>")
                         call append(line(".")+9,"using namespace std;")
-                        call append(line(".")+10,"const string name1(),name2();")
-                        call append(line(".")+11,"ifstream f1(name1),f2(name2);")
-                        call append(line(".")+12,"int main()")
-                        call append(line(".")+13,"{")
-                        call append(line(".")+14,"       while(true)")
-                        call append(line(".")+15,"       {")
-                        call append(line(".")+16,"               system(\"./rand1\");system(\"./1\");system(\"./1\");")
-                        call append(line(".")+17,"               char ch1,ch2; int k=-1;f1.clear();f2.clear();")
-                        call append(line(".")+18,"               while(f1 and f2)")
-                        call append(line(".")+19,"               {")
-                        call append(line(".")+20,"                       f1>>ch1;f2>>ch2;")
-                        call append(line(".")+21,"                       if(ch1=='\\n')k++;")
-                        call append(line(".")+22,"                       if(ch1!=ch2)cout<<\"NO. on line:\"<<k<<endl;")
-                        call append(line(".")+23,"                       else cout<<\"Yes\"<<endl;")
-                        call append(line(".")+24,"               }")
-                        call append(line(".")+25,"       }")
-                        call append(line(".")+26,"       return 0;")
-                        call append(line(".")+27,"}")
+                        call append(line(".")+10,"int main()")
+                        call append(line(".")+11,"{")
+                        call append(line(".")+12,"    int cnt=0;")
+                        call append(line(".")+13,"    while(true)")
+                        call append(line(".")+14,"    {")
+                        call append(line(".")+15,"        printf(\"Case #%d:\",cnt++);")
+                        call append(line(".")+16,"        system(\"./rand1\");system(\"./bl1\");system(\"./1\");")
+                        call append(line(".")+17,"        int k=system(\"diff bl.out .out\");")
+                        call append(line(".")+18,"        if(!k)printf(\"Yes\\n\");")
+                        call append(line(".")+19,"        else {printf(\"No\\n\");return 0;}")
+                        call append(line(".")+20,"    }")
+                        call append(line(".")+21,"    return 0;")
+                        call append(line(".")+22,"}")
                 else
                         call setline(1,"/*******************************")
                         call append(line("."),"Author:galaxy yr")
@@ -353,7 +347,6 @@ let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
 " 快捷键 i 开/关缩进可视化
 nmap <silent> <Leader>i <Plug>IndentGuidesToggle
-nmap <silent> <Leader>sw :FSHere<cr>
 "}}}
 "{{{ 抄的
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
@@ -578,7 +571,7 @@ let g:UltiSnipsExpandTrigger="<c-l>"
 "}}}
 "{{{ 配色方案
 if(has("gui_running"))
-set background=dark
+"set background=light
 colorscheme solarized
 else
 colorscheme ir_black
@@ -598,6 +591,31 @@ else
 "let g:Powerline_colorscheme='solarized256'
 endif
 syntax keyword cppSTLtype initializer_list
+"}}}
+"{{{彩色括号匹配
+let g:rainbow_active = 1 
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['white',         'firebrick3'],
+    \ ]
 "}}}
 "SF function{{{
 function! Search_Function()
