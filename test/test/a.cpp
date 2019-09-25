@@ -1,17 +1,9 @@
 #include<iostream>
-#include<ncurses.h>
+#include<string>
 int main()
 {
-    initscr();
-    raw();
-    start_color();
-    init_pair(1,COLOR_CYAN,COLOR_BLACK);
-    printw("Hello world!\n");
-    mvchgat(0,0,-1,A_BLINK,1,NULL);
-    //char ch;
-    //attron(COLOR_PAIR(2));
-    //attroff(COLOR_PAIR(2));
-    refresh();
-    getch();
-    endwin();
+    std::string s="hello world\n";
+    const void * s1=(void *)s.c_str();
+    const void * s2=(void*)s.data();
+    std::cout<<s<<(s1)<<' '<<(s2)<<std::endl;
 }
