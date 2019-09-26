@@ -1,85 +1,83 @@
+/*******************************
+Author:galaxy yr
+LANG:C++
+Created Time:2019年09月22日 星期日 19时21分35秒
+*******************************/
 #include<iostream>
 #include<cstdio>
+#include<cstring>
 #include<string>
+#include<queue>
+
 using namespace std;
-const int maxn=1e6+10;
-int AC[maxn][26];
-int bo[maxn];
-int nxt[maxn];
-bool bj[maxn];
-int tot=1;
-string s;
-void make()
+
+const int maxn=2e5+10;
+int ans[maxn],n,head[maxn],cnt,tot=1,ch[maxn][26],now,match[maxn],fail[maxn],size[maxn];
+string s,t;
+queue<int>que;
+
+struct edge{
+    int to,next;
+}e[maxn<<1];
+
+void add(int u,int v)
 {
-	int u=1;
-	for(int i=0;i<s.size();i++)
-	{
-		int c=s[i]-'a';
-		if(!AC[u][c])AC[u][c]=++tot;
-		u=AC[u][c];
-	}
-		bo[u]++;
+    e[++cnt].to=v;
+    e[cnt].next=head[u];
+    head[u]=cnt;
 }
-int que[maxn];
-int q1,q2;
-void bfs()
+
+void dfs(int now)
 {
-	for(int i=0;i<=25;i++)
-		AC[0][i]=1;
-	que[1]=1;
-	nxt[1]=0;
-	int q1=0,q2=1,u;
-	while(q1<q2)
-	{
-		u=que[++q1];
-		for(int i=0;i<=25;i++)
-		{
-			if(!AC[u][i])AC[u][i]=AC[nxt[u]][i];
-			else
-			{
-				que[++q2]=AC[u][i];
-				int v=nxt[u];
-				nxt[AC[u][i]]=AC[v][i];
-			}
-		}
-	}
+    for(int i=head[now];i;i=e[i].next)
+    {
+        dfs(e[i].to);
+        size[now]+=size[e[i].to];
+    }
 }
-int ans;
-void find()
-{
-	int u=1;
-	for(int i=0;i<s.size();i++)
-	{
-		int c=s[i]-'a';
-		
-		int k=AC[u][c];
-		while(k>1 and !bj[k])
-		{
-			ans+=bo[k];
-			bo[k]=0;
-			bj[k]=1;
-			k=nxt[k];
-		}
-		u=AC[u][c];
-	}
-	return;
-}
-int n;
+
 int main()
 {
-
-         freopen("AC自动机.in","r",stdin);
-         freopen("AC自动机.out","w",stdout);
-	 scanf("%d",&n);
-	 
-	 while(n--)
-	 {
-		 cin>>s;
-		 make();
-	 }
-	 bfs();
-	 cin>>s;
-	 find();
-	 cout<<ans;
-	 return 0;
+    //freopen("p3796.in","r",stdin);
+    //freopen("p3796.out","w",stdout);
+    cin>>n;
+    for(int i=1;i<=n;i++)
+    {
+        cin>>s;
+        now=1;
+        for(int j=0;j<(int)s.size();j++)
+        {
+            int c=s[j]-'a';
+            if(!ch[now][c]) ch[now][c]=++tot;
+            now=ch[now][c];
+        }
+        match[i]=now;
+    }
+    for(int i=0;i<26;i++) ch[0][i]=1;
+    que.push(1);
+    while(!que.empty())
+    {
+        int x=que.front(); que.pop();
+        for(int i=0;i<26;i++)
+            if(ch[x][i])
+            {
+                fail[ch[x][i]]=ch[fail[x]][i];
+                que.push(ch[x][i]);
+            }
+            else ch[x][i]=ch[fail[x]][i];
+    }
+    cin>>s;
+    now=1;
+    for(int i=0;i<(int)s.size();i++)
+    {
+        int c=s[i]-'a';
+        now=ch[now][c];
+        size[now]++;
+    }
+    for(int i=2;i<=tot;i++)
+        add(fail[i],i);
+    dfs(1);
+    for(int i=1;i<=n;i++)
+        cout<<size[match[i]]<<endl;
+    return 0;
 }
