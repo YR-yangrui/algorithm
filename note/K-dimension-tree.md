@@ -1,4 +1,6 @@
+
 ## K-Dimension-Tree (KDT)
+[宣传一波个人博客](https://www.galaxyyr.site)
 
 顾名思义，kd树其实就是多维二叉树（空间二叉树的一种特殊情况）， 里面储存着k维的点的信息，是对k维空间进行划分的一种数据结构。
 在竞赛中一般用来解决二维空间和三维空间的信息检索
@@ -31,13 +33,13 @@ KD树的构建有两种方法：一种利用方差，一种根据维度来划分
 
 也就是说假如我们要储存n个三维的点(x,y,z)信息。
 
-我们先按x坐标sort一遍，选出中间值 <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;$x_{mid}$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;$x_{mid}$" title="$x_{mid}$" /></a> 作为根节点，然后所有x比<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;$x_{mid}$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;$x_{mid}$" title="$x_{mid}$" /></a>小的点在左子树，比<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;$x_{mid}$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;$x_{mid}$" title="$x_{mid}$" /></a>大的在右子树。
+我们先按x坐标sort一遍，选出中间值 $x_{mid}$作为根节点，然后所有x比$x_{mid}$小的点在左子树，比$x_{mid}$大的在右子树。
 
 然后左,右子树分别按照y坐标sort一遍选出中间值作为子树的根节点，接着再在子树中按照z坐标sort一遍。接着再按x坐标...以此类推。
 
 sort顺序即为:x->y->z->x->y->z->x...
 
-当然每一层的划分方法可以自己来决定，但一般都是按照维度<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;$d_1,d_2,d_3...d_k$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;$d_1,d_2,d_3...d_k$" title="$d_1,d_2,d_3...d_k$" /></a>来进行划分。你也可以按照自己的顺序来进行(例如:先按<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;$d_1$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;$d_1$" title="$d_1$" /></a> sort两遍,再按<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;$d_1$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;$d_1$" title="$d_2$" /></a> sort两遍...
+当然每一层的划分方法可以自己来决定，但一般都是按照维度$d_1,d_2,d_3...d_k$来进行划分。你也可以按照自己的顺序来进行(例如:先按$d_1$ sort两遍,再按$d_2$ sort两遍...
 
 一维的KD树即为一颗平衡二叉树
 
@@ -58,14 +60,12 @@ nth_element(a+start,a+nth,a+end)
 
 (这里直接复制我自己的 PPT）
 
-![坐标轴](https://i.loli.net/2019/04/13/5cb14b25bba24.png)
-
-![1](https://i.loli.net/2019/04/13/5cb1846bf2bc3.png)
-![2](https://i.loli.net/2019/04/13/5cb1846c33790.png)
-![3](https://i.loli.net/2019/04/13/5cb1846c357e0.png)
-![4](https://i.loli.net/2019/04/13/5cb1846c42f39.png)
-![5](https://i.loli.net/2019/04/13/5cb1846c4ca7a.png)
-![6](https://i.loli.net/2019/04/13/5cb1846cebb35.png)
+![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTRiMjViYmEyNC5wbmc?x-oss-process=image/format,png)
+![2](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg0NmMzMzc5MC5wbmc?x-oss-process=image/format,png)![1](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg0NmJmMmJjMy5wbmc?x-oss-process=image/format,png)
+![4](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg0NmM0MmYzOS5wbmc?x-oss-process=image/format,png)
+![6](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg0NmNlYmIzNS5wbmc?x-oss-process=image/format,png)
+![3](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg0NmMzNTdlMC5wbmc?x-oss-process=image/format,png)
+![5](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg0NmM0Y2E3YS5wbmc?x-oss-process=image/format,png)
 
 代码
 
@@ -99,9 +99,9 @@ int build(int l,int r,int now)
 
 ## 最邻近算法
 
-![1](https://i.loli.net/2019/04/13/5cb18601a4a8d.png)
-![2](https://i.loli.net/2019/04/13/5cb18601cea28.png)
-![3](https://i.loli.net/2019/04/13/5cb1860212b2f.png)
+![1](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg2MDFhNGE4ZC5wbmc?x-oss-process=image/format,png)
+![3](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg2MDIxMmIyZi5wbmc?x-oss-process=image/format,png)
+![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pLmxvbGkubmV0LzIwMTkvMDQvMTMvNWNiMTg2MDFjZWEyOC5wbmc?x-oss-process=image/format,png)
 
 这个时候我们每个节点就需要维护一个最大空间（二维就是最大矩阵）
 
@@ -132,7 +132,7 @@ struct node{
 
 所以我们每次直接从根节点开始搜索，再来比较就行了。
 
-查询复杂度<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;O$(KN^{1-1/k})$" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;O$(KN^{1-1/k})$" title="O$(KN^{1-1/k})$" /></a>
+查询复杂度O$(KN^{1-1/k})$
 
 如果还没懂的话请结合代码理解。（作者语文不好）
 
