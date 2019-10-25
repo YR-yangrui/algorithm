@@ -29,13 +29,13 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/DrawIt'
 Plugin 'SirVer/ultisnips'
 Plugin 'liuchengxu/space-vim-dark'
-"Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'derekwyatt/vim-protodef'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
 Plugin 'gcmt/wildfire.vim'
 Plugin 'vimcdoc-1.5.0'
-Plugin 'sjl/gundo.vim'
+"Plugin 'sjl/gundo.vim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'godlygeek/tabular'
 Plugin 'w0rp/ale'
@@ -43,6 +43,7 @@ Plugin 'lilydjwg/fcitx.vim'
 "markdown 即时浏览
 Plugin 'iamcco/markdown-preview.vim'
 Plugin 'iamcco/mathjax-support-for-mkdp'
+Plugin 'lervag/vimtex'
 "Plugin 'vim-airline/vim-airline'
 "Plugin 'vim-airline/vim-airline-themes'
 "Plugin 'vimwiki/vimwiki'
@@ -82,7 +83,7 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 "}}}
 "{{{映射
 map <F7> gg /freopen<CR>Vj;ccggVG"+ygg/freopen<CR>Vj;cu:w<CR>
-map <F9> :w<Esc>:!g++ -Wall -g '%' -o '%:r1'<Esc>
+map <F9> :w<Esc>:!g++ -Wall -g '%' -o '%:r1' -l ncurses <Esc>
 map<F10> <Esc>:!./'%:r1'<Esc> :!cat '%:r'.out<Esc>
 "{{{Cp function
 function! Cp()
@@ -97,11 +98,12 @@ map <c-F10> :call Cp()<Cr>
 "}}}
 "map <F10> :call EXecute()<CR>
 map <c-g> <Esc>:!gdb -q '%:r1'<Esc>
-map <c-F7> <Esc>ggVG"+y<CR>
+map <c-F7> <Esc>ggVG"+y
 "map <c-g> <Esc>:Termdebug %:r1<esc>
 map <leader>we  <esc>:w! ~/.temp/%<Esc>
 map <leader>to <esc>:vsp ~/.temp/%<esc>
 map <leader>oi <esc>:vsp %:r.in<esc>
+map <leader>es :vsp ~/YR/word/word.txt<CR>
 map <leader>oo <esc>:vsp %:r.out<esc>
 map ,n <esc>:tabn<esc>
 map ,p <esc>:tabp<esc>
@@ -235,68 +237,87 @@ nmap <leader>mc <esc>:StopMarkdownPreview<esc>
 "}}}
 "{{{自动插入文件头
 function! CurDir()
-        let curdir=substitute(getcwd(),$HOME,"~","g")
-        return curdir
+    let curdir=substitute(getcwd(),$HOME,"~","g")
+    return curdir
 endfunction
-autocmd BufNewFile *.cpp :call SetTitle()
+autocmd BufNewFile *.* :call SetTitle()
 function! SetTitle()
-        if &filetype =='cpp'
-                if(CurDir()=='~/YR/USACO')
-                        call setline(1,"/*")
-                        call append(line("."),"ID:galaxy_6")
-                        call append(line(".")+1,"LANG:C++")
-                        call append(line(".")+2,"TASK:".expand("%:r"))
-                        call append(line(".")+3,"*/")
-                        call append(line(".")+4,"#include<iostream>")
-                        call append(line(".")+5,"#include<cstdio>")
-                        call append(line(".")+6,"using namespace std;")
-                        call append(line(".")+7,"int main()")
-                        call append(line(".")+8,"{")
-                        call append(line(".")+9,"    freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+10,"    freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                        call append(line(".")+11,"}")
-                elseif expand("%")=="dp.cpp"
-                        call setline(1,"/*******************************")
-                        call append(line("."),"Author:galaxy yr")
-                        call append(line(".")+1,"LANG:C++")
-                        call append(line(".")+2,"Created Time:".strftime("%c"))
-                        call append(line(".")+3,"*******************************/")
-                        call append(line(".")+4,"#include<fstream>")
-                        call append(line(".")+5,"#include<string>")
-                        call append(line(".")+6,"#include<ctime>")
-                        call append(line(".")+7,"#include<cstdlib>")
-                        call append(line(".")+8,"#include<cstdio>")
-                        call append(line(".")+9,"using namespace std;")
-                        call append(line(".")+10,"int main()")
-                        call append(line(".")+11,"{")
-                        call append(line(".")+12,"    int cnt=0;")
-                        call append(line(".")+13,"    while(true)")
-                        call append(line(".")+14,"    {")
-                        call append(line(".")+15,"        printf(\"Case #%d:\",cnt++);")
-                        call append(line(".")+16,"        system(\"./rand1\");system(\"./bl1\");system(\"./1\");")
-                        call append(line(".")+17,"        int k=system(\"diff bl.out .out\");")
-                        call append(line(".")+18,"        if(!k)printf(\"Yes\\n\");")
-                        call append(line(".")+19,"        else {printf(\"No\\n\");return 0;}")
-                        call append(line(".")+20,"    }")
-                        call append(line(".")+21,"    return 0;")
-                        call append(line(".")+22,"}")
-                else
-                        call setline(1,"/*******************************")
-                        call append(line("."),"Author:galaxy yr")
-                        call append(line(".")+1,"LANG:C++")
-                        call append(line(".")+2,"Created Time:".strftime("%c"))
-                        call append(line(".")+3,"*******************************/")
-                        call append(line(".")+4,"#include<iostream>")
-                        call append(line(".")+5,"#include<cstdio>")
-                        call append(line(".")+6,"using namespace std;")
-                        call append(line(".")+7,"int main()")
-                        call append(line(".")+8,"{")
-                        call append(line(".")+9,"    freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
-                        call append(line(".")+10,"    freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
-                        call append(line(".")+11,"}")
-                endif
+    if &filetype =='cpp'
+        if(CurDir()=='~/YR/USACO')
+            call setline(1,"/*")
+            call append(line("."),"ID:galaxy_6")
+            call append(line(".")+1,"LANG:C++")
+            call append(line(".")+2,"TASK:".expand("%:r"))
+            call append(line(".")+3,"*/")
+            call append(line(".")+4,"#include<iostream>")
+            call append(line(".")+5,"#include<cstdio>")
+            call append(line(".")+6,"")
+            call append(line(".")+7,"using namespace std;")
+            call append(line(".")+8,"")
+            call append(line(".")+9,"int main()")
+            call append(line(".")+10,"{")
+            call append(line(".")+11,"    freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+            call append(line(".")+12,"    freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+            call append(line(".")+13,"}")
+        elseif expand("%")=="dp.cpp"
+            call setline(1,"/*******************************")
+            call append(line("."),"Author:galaxy yr")
+            call append(line(".")+1,"LANG:C++")
+            call append(line(".")+2,"Created Time:".strftime("%c"))
+            call append(line(".")+3,"*******************************/")
+            call append(line(".")+4,"#include<fstream>")
+            call append(line(".")+5,"#include<string>")
+            call append(line(".")+6,"#include<ctime>")
+            call append(line(".")+7,"#include<cstdlib>")
+            call append(line(".")+8,"#include<cstdio>")
+            call append(line(".")+8,"")
+            call append(line(".")+10,"using namespace std;")
+            call append(line(".")+11,"")
+            call append(line(".")+12,"int main()")
+            call append(line(".")+13,"{")
+            call append(line(".")+14,"    int cnt=0;")
+            call append(line(".")+15,"    while(true)")
+            call append(line(".")+16,"    {")
+            call append(line(".")+17,"        printf(\"Case #%d:\",cnt++);")
+            call append(line(".")+18,"        system(\"./rand1\");system(\"./bl1\");system(\"./1\");")
+            call append(line(".")+19,"        int k=system(\"diff bl.out .out\");")
+            call append(line(".")+20,"        if(!k)printf(\"Yes\\n\");")
+            call append(line(".")+21,"        else {printf(\"No\\n\");return 0;}")
+            call append(line(".")+22,"    }")
+            call append(line(".")+23,"    return 0;")
+            call append(line(".")+24,"}")
+        else
+            call setline(1,"/*******************************")
+            call append(line("."),"Author:galaxy yr")
+            call append(line(".")+1,"LANG:C++")
+            call append(line(".")+2,"Created Time:".strftime("%c"))
+            call append(line(".")+3,"*******************************/")
+            call append(line(".")+4,"#include<iostream>")
+            call append(line(".")+5,"#include<cstdio>")
+            call append(line(".")+6,"")
+            call append(line(".")+7,"using namespace std;")
+            call append(line(".")+8,"")
+            call append(line(".")+9,"int main()")
+            call append(line(".")+10,"{")
+            call append(line(".")+11,"    freopen(\"".expand("%:r").expand(".in\",\"r\",stdin);"))
+            call append(line(".")+12,"    freopen(\"".expand("%:r").expand(".out\",\"w\",stdout);"))
+            call append(line(".")+13,"}")
         endif
-        autocmd BufNewFile * normal G
+    endif
+    if &filetype =='markdown'
+        echo "yes"
+        if(CurDir()=='~/Blog/source/_posts')
+            call setline(1,"---")
+            call append(line("."),"title: ".expand("%:r"))
+            call append(line(".")+1,"date: ".strftime("%Y-%m-%d %k:%M:%S"))
+            call append(line(".")+2,"author: Galaxy yr")
+            call append(line(".")+3,"mathjax: true")
+            call append(line(".")+4,"categories: ")
+            call append(line(".")+5,"tags: ")
+            call append(line(".")+6,"---")
+        endif
+    endif
+    autocmd BufNewFile * normal G
 endfunction
 "}}}
 "{{{NERDTree
@@ -572,7 +593,7 @@ let g:UltiSnipsExpandTrigger="<c-l>"
 "{{{ 配色方案
 if(has("gui_running"))
 "set background=light
-colorscheme solarized
+colorscheme molokai
 else
 colorscheme ir_black
 endif
@@ -608,12 +629,12 @@ let g:rbpt_colorpairs = [
     \ ['darkmagenta', 'DarkOrchid3'],
     \ ['brown',       'firebrick3'],
     \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
+    \ ['white',       'SeaGreen3'],
+    \ ['magenta', 'DarkOrchid3'],
+    \ ['blue',    'firebrick3'],
+    \ ['green',   'RoyalBlue3'],
+    \ ['cyan',    'SeaGreen3'],
+    \ ['red',     'DarkOrchid3'],
     \ ['white',         'firebrick3'],
     \ ]
 "}}}

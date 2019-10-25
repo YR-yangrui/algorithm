@@ -57,7 +57,7 @@ struct Matrix{
         for(int k=1;k<=n;k++)
             for(int i=1;i<=n;i++)
                 for(int j=1;j<=n;j++)
-                    t[i][j]=(1ll*a[i][k]*a[k][j]+t[i][j])%mod;
+                    t[i][j]=(1ll*a[i][k]*p[k][j]+t[i][j])%mod;
         return t;
     }
     Matrix operator+(const Matrix & p)const//矩阵加法
