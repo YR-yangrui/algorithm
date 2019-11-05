@@ -8,7 +8,7 @@ Created Time:2019年07月15日 星期一 15时04分21秒
 using namespace std;
 struct Trie{
     enum{maxn=1000010};
-    int ch[maxn][26],cnt,v[maxn],sum[maxn];
+    int ch[maxn][2],cnt,sum[maxn*2];
     inline int insert(int x,int val)
     {
         int o,y;o=y=++cnt;
@@ -38,8 +38,8 @@ struct Trie{
             }
             else
             {
-                r=ch[r][c^1];
-                l=ch[l][c^1];
+                r=ch[r][c];
+                l=ch[l][c];
             }
         }
         return ans;
