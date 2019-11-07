@@ -52,6 +52,7 @@ long long ksm(long long a,long long b,long long mod)
 
 bool Miller_Rabin(long long x)
 {
+    if(x==1) return false;
     if(!(x&1))return false;
     long long tmp=x-1,s=0,k,nxt;
     while(!(tmp&1))s++,tmp>>=1;
