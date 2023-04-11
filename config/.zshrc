@@ -71,7 +71,6 @@ plugins=(
   rake
   ruby
   bundler
-  autojump
   extract
   web-search
   vi-mode
