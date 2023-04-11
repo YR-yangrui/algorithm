@@ -1,10 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-export PATH=$PATH:/home/glaxy_yr/Downloads/cmake-3.13.3/bin
+export PATH=$PATH
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
-export YR=/home/yr/
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -12,7 +11,7 @@ export YR=/home/yr/
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # 主题
 #ZSH_THEME="agnoster"
-ZSH_THEME="myys"
+ZSH_THEME="ys"
 #ZSH_THEME="random" # (...please let it be pie... please be some pie..)
 
 # Set list of themes to pick from when loading at random
