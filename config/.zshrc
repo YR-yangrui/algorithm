@@ -71,7 +71,6 @@ plugins=(
   rake
   ruby
   bundler
-  osx
   autojump
   extract
   web-search
